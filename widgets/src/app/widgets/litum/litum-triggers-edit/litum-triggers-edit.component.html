@@ -1,0 +1,91 @@
+<form [formGroup]="triggersGroup">
+  <div
+    fxLayout="row"
+    fxFill
+    fxLayoutGap="1rem"
+    *ngIf="availableBusinessRules$ | async as rules"
+  >
+    <ng-container *ngIf="rules.length > 0">
+      <mat-form-field fxFlex="40">
+        <mat-label>Unassigned Business Rules</mat-label>
+        <mat-select formControlName="triggerToAdd" #triggerToAdd>
+          <mat-option *ngFor="let rule of rules" [value]="rule.id">
+            {{ rule.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button
+        mat-icon-button
+        color="primary"
+        (click)="addTrigger(triggerToAdd.value)"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </ng-container>
+  </div>
+  <p class="intro">
+    The following Litum Business Rules will generate ThingsBoard alarms
+    automatically:
+  </p>
+  <mat-list class="triggers-list" formArrayName="triggers">
+    <mat-list-item
+      class="trigger-item"
+      *ngFor="let group of triggersArray.controls; let i = index"
+      [formGroupName]="i"
+    >
+      <div fxLayout="row" fxFill fxLayoutGap="1rem">
+        <span>{{ i + 1 }}.</span>
+        <mat-form-field fxFlex="40">
+          <mat-label
+            >Business Rule {{ group.get("businessRuleId").value }}
+          </mat-label>
+          <input
+            matInput
+            type="text"
+            readonly
+            formControlName="businessRuleName"
+          />
+          <input matInput type="hidden" formControlName="businessRuleId" />
+        </mat-form-field>
+        <mat-form-field fxFlex="40">
+          <mat-label>Alarm Type</mat-label>
+          <mat-select formControlName="alarmType">
+            <mat-option *ngFor="let type of alarmTypes" [value]="type"
+              >{{ type }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field fxFlex="20">
+          <mat-label>Alarm Severity</mat-label>
+          <mat-select formControlName="alarmSeverity">
+            <mat-option [value]="'CRITICAL'">critical</mat-option>
+            <mat-option [value]="'MAJOR'">major</mat-option>
+            <mat-option [value]="'MINOR'">minor</mat-option>
+            <mat-option [value]="'WARNING'">warning</mat-option>
+            <mat-option [value]="'INDETERMINATE'">indeterminate</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button
+          mat-icon-button
+          color="warn"
+          (click)="triggersArray.removeAt(i)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </mat-list-item>
+  </mat-list>
+  <div class="triggers-button-bar" fxLayout="row" fxLayoutGap="1rem">
+    <button
+      mat-raised-button
+      type="button"
+      color="primary"
+      (click)="saveTriggers()"
+    >
+      Save
+    </button>
+    <button mat-raised-button type="button" (click)="resetTriggers()">
+      Reset
+    </button>
+  </div>
+</form>

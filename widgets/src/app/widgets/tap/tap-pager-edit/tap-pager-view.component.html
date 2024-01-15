@@ -1,0 +1,13 @@
+<div fxLayout="row" fxFill fxLayoutGap="1rem">
+  <mat-form-field fxFlex="50">
+    <mat-label>Pager Name</mat-label>
+    <input matInput type="text" [value]="pager.deviceName" readonly />
+  </mat-form-field>
+  <mat-form-field fxFlex="50">
+    <mat-label>Pager Number</mat-label>
+    <input matInput type="text" [value]="pager.pagerNumber" readonly />
+  </mat-form-field>
+  <button mat-icon-button (click)="onClick()" color="warn">
+    <mat-icon>remove</mat-icon>
+  </button>
+</div>

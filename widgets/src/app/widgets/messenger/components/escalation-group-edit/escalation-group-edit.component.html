@@ -1,0 +1,38 @@
+<mat-tab-group>
+  <mat-tab label="Details">
+    <div fxLayout="column">
+      <mat-form-field appearance="fill" class="pt-1">
+        <mat-label>Escalation Group Name</mat-label>
+        <input matInput type="text" [formControl]="fcName" />
+      </mat-form-field>
+    </div>
+  </mat-tab>
+  <mat-tab label="Devices">
+    <mat-selection-list
+      *ngIf="group !== null"
+      (selectionChange)="selectionChange($event)"
+    >
+      <mat-list-option
+        *ngFor="let device of devices"
+        [value]="device"
+        [selected]="group.devices.indexOf(device.id) !== -1"
+        >{{ device.name }}
+      </mat-list-option>
+    </mat-selection-list>
+  </mat-tab>
+  <mat-tab label="Usage">
+    <mat-list role="list">
+      <mat-list-item
+        role="listitem"
+        *ngFor="let level of usedByLevels; index as i"
+      >
+        <span>
+          <em style="margin-right: 0.8rem">{{ i + 1 }}.</em> {{ level.name }}
+        </span>
+      </mat-list-item>
+      <mat-list-item role="listitem" *ngIf="usedByLevels.length === 0">
+        <span> <em style="margin-right: 0.8rem">0</em>Not used. </span>
+      </mat-list-item>
+    </mat-list>
+  </mat-tab>
+</mat-tab-group>

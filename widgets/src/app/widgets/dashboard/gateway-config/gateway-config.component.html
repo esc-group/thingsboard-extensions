@@ -1,0 +1,30 @@
+<div
+  fxLayout="row"
+  fxFill
+  fxLayoutGap="1rem"
+  fxLayoutAlign="space-between center"
+>
+  <div class="font-xl" [class.inactive]="inactive$ | async">
+    {{ title$ | async }}
+  </div>
+  <button
+    mat-mini-fab
+    color="accent"
+    class="no-box-shadow"
+    (click)="openDialog()"
+    [disabled]="this.component === null"
+  >
+    <mat-icon>edit</mat-icon>
+  </button>
+</div>
+<jw-modal [id]="modalId">
+  <div class="title-block">
+    <div class="font-xl">{{ title$ | async }}</div>
+    <button mat-icon-button (click)="closeDialog()" class="no-box-shadow">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="modal-body">
+    <ng-template #container></ng-template>
+  </div>
+</jw-modal>

@@ -1,0 +1,24 @@
+:host {
+}
+
+.pt-1 {
+  padding-top: 1rem;
+}
+
+.mt-1 {
+  margin-top: 1rem;
+}
+
+.bordered {
+  border: 1px solid lightgray;
+  padding: 1rem;
+  /* offset-x | offset-y | blur-radius | spread-radius | color */
+  box-shadow: 1px 1px 1px 1px rgba(90, 90, 90, 0.2);
+}
+
+.level-tab {
+  min-height: 200px;
+  max-height: 400px;
+  margin-top: 1rem;
+  overflow-y: auto;
+}

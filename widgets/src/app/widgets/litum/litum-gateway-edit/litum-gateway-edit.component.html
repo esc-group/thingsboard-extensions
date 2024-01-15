@@ -1,0 +1,18 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div fxLayout="column" fxFill fxLayoutGap="1rem">
+    <div fxLayout="column" fxFill fxLayoutGap="1rem">
+      <mat-form-field>
+        <mat-label>Host</mat-label>
+        <input matInput formControlName="host" type="text" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Port</mat-label>
+        <input matInput formControlName="port" type="number" />
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutGap="1rem">
+      <button mat-raised-button type="submit" color="primary">Save</button>
+      <button mat-raised-button type="button" (click)="onReset()">Reset</button>
+    </div>
+  </div>
+</form>

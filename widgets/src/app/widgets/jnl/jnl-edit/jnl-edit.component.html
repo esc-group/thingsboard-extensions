@@ -1,0 +1,29 @@
+<mat-accordion>
+  <mat-expansion-panel *ngIf="quantumConfig$ | async as quantumConfig">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Quantum Configuration</mat-panel-title>
+    </mat-expansion-panel-header>
+    <ats-jnl-quantum-edit
+      [config]="quantumConfig"
+      (save)="onQuantumSave($event)"
+    ></ats-jnl-quantum-edit>
+  </mat-expansion-panel>
+  <ng-container *ngIf="alarmTypes$ | async as alarmTypes">
+    <ng-container *ngIf="rooms$ | async as rooms">
+      <mat-expansion-panel
+        *ngIf="alarmsConfig$ | async as alarmsConfig"
+        expanded
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>Alarm Generation Triggers</mat-panel-title>
+        </mat-expansion-panel-header>
+        <ats-jnl-alarms-edit
+          [config]="alarmsConfig"
+          [alarmTypes]="alarmTypes"
+          [rooms]="rooms"
+          (save)="onAlarmsSave($event)"
+        ></ats-jnl-alarms-edit>
+      </mat-expansion-panel>
+    </ng-container>
+  </ng-container>
+</mat-accordion>

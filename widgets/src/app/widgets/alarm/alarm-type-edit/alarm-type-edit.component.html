@@ -1,0 +1,33 @@
+<div fxLayout="column" fxLayoutGap="1rem">
+  <form>
+    <mat-form-field>
+      <mat-label>Add User Alarm Type</mat-label>
+      <input matInput #alarmTypeInput />
+    </mat-form-field>
+    <button
+      mat-icon-button
+      type="submit"
+      color="primary"
+      (click)="addAlarmType()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </form>
+
+  <mat-list class="alarm-list">
+    User Added Alarm Types:
+    <mat-list-item disabled *ngIf="alarmTypes.length === 0">None</mat-list-item>
+    <mat-list-item *ngFor="let alarmType of alarmTypes">
+      <mat-icon matListItemIcon>circle_notifications</mat-icon>
+      {{ alarmType }}
+      <button
+        matListItemMeta
+        mat-icon-button
+        type="button"
+        (click)="delAlarmType(alarmType)"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-list-item>
+  </mat-list>
+</div>

@@ -1,0 +1,13 @@
+:host {
+}
+
+.pt-1 {
+  padding-top: 1rem;
+}
+
+.bordered {
+  border: 1px solid lightgray;
+  padding: 1rem;
+  /* offset-x | offset-y | blur-radius | spread-radius | color */
+  box-shadow: 1px 1px 1px 1px rgba(90, 90, 90, 0.2);
+}

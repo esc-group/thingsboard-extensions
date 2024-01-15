@@ -1,0 +1,25 @@
+<mat-accordion multi>
+  <mat-expansion-panel *ngIf="tapGateway$ | async as tapGateway">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Server Configuration</mat-panel-title>
+    </mat-expansion-panel-header>
+    <ats-tap-gateway-config-edit
+      [gateway]="tapGateway"
+      (save)="saveGateway($event)"
+    ></ats-tap-gateway-config-edit>
+  </mat-expansion-panel>
+  <mat-expansion-panel *ngIf="tapPagers$ | async as tapPagers" expanded>
+    <mat-expansion-panel-header>
+      <mat-panel-title>Pager Device Management</mat-panel-title>
+    </mat-expansion-panel-header>
+    <ats-tap-pager-add (add)="addPager($event)"></ats-tap-pager-add>
+    <mat-list>
+      <mat-list-item *ngFor="let pager of tapPagers" lines="3">
+        <ats-tap-pager-view
+          [pager]="pager"
+          (delete)="deletePager($event)"
+        ></ats-tap-pager-view>
+      </mat-list-item>
+    </mat-list>
+  </mat-expansion-panel>
+</mat-accordion>

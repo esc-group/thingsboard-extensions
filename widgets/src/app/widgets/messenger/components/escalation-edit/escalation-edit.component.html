@@ -1,0 +1,121 @@
+<h2 *ngIf="isLoading$ | async">Loading...</h2>
+<h2 *ngIf="loadError$ | async as error">{{ error }}</h2>
+
+<ng-container *ngIf="(isLoading$ | async) === false">
+  <mat-accordion multi [hidden]="loadError$ | async">
+    <mat-expansion-panel expanded>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Escalation Levels</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="start">
+        <mat-form-field appearance="fill" fxFlex="80%">
+          <mat-label>Escalation Level</mat-label>
+          <input
+            *ngIf="(levels$ | async).length == 0"
+            matInput
+            readonly
+            value="No levels added yet."
+          />
+          <mat-select
+            *ngIf="(levels$ | async).length > 0"
+            [ngModel]="selectedLevel$ | async"
+            (ngModelChange)="setSelectedLevel($event)"
+          >
+            <mat-option *ngFor="let level of levels$ | async" [value]="level"
+              >{{ level.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-icon-button (click)="addEscalationLevel()">
+          <mat-icon>add</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="warn"
+          [disabled]="disableLevelRemoval$ | async"
+          (click)="removeSelectedLevel()"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <ats-escalation-level-edit
+        (status)="levelStatusChanged($event)"
+      ></ats-escalation-level-edit>
+    </mat-expansion-panel>
+    <mat-expansion-panel expanded>
+      <mat-expansion-panel-header>
+        <mat-panel-title> Escalation Groups</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="start">
+        <mat-form-field appearance="fill" fxFlex="80%">
+          <mat-label>Escalation Group</mat-label>
+          <input
+            *ngIf="(groups$ | async).length === 0"
+            matInput
+            readonly
+            value="No groups added yet."
+          />
+          <mat-select
+            *ngIf="(groups$ | async).length > 0"
+            [ngModel]="selectedGroup$ | async"
+            (ngModelChange)="setSelectedGroup($event)"
+          >
+            <mat-option *ngFor="let group of groups$ | async" [value]="group"
+              >{{ group.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-icon-button (click)="addEscalationGroup()">
+          <mat-icon>add</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="warn"
+          [disabled]="(selectedGroupUsedByLevels$ | async).length > 0"
+          (click)="removeSelectedGroup()"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <ng-container *ngIf="(groups$ | async).length > 0">
+        <ats-escalation-group-edit
+          [usedByLevels]="selectedGroupUsedByLevels$ | async"
+          [group]="selectedGroup$ | async"
+          [devices]="devices$ | async"
+          (deviceAdded)="addDeviceToGroup($event)"
+          (deviceRemoved)="removeDeviceFromGroup($event)"
+        ></ats-escalation-group-edit>
+      </ng-container>
+    </mat-expansion-panel>
+    <mat-expansion-panel expanded>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Alarm Type Management</mat-panel-title>
+      </mat-expansion-panel-header>
+      <ats-alarm-type-edit
+        #userAlarmTypes
+        (change)="userAlarmTypesChanged()"
+      ></ats-alarm-type-edit>
+    </mat-expansion-panel>
+    <div style="margin-top: 1rem">
+      <button
+        mat-raised-button
+        style="margin-right: 2rem"
+        color="primary"
+        (click)="saveClicked()"
+        [disabled]="saveDisabled$ | async"
+      >
+        Save
+      </button>
+      <button
+        mat-raised-button
+        style="margin-right: 2rem"
+        color="accent"
+        (click)="resetClicked()"
+        [disabled]="isSaving$ | async"
+      >
+        Reset
+      </button>
+      <span *ngIf="saveError$ | async as error">{{ error }}</span>
+    </div>
+  </mat-accordion>
+</ng-container>

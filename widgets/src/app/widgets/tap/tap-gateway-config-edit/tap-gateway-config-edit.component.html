@@ -1,0 +1,42 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <input matInput type="hidden" formControlName="deviceId" />
+  <input matInput type="hidden" formControlName="deviceName" />
+  <div fxLayout="row" fxFill fxLayoutGap="1rem">
+    <mat-form-field fxFlex="50">
+      <mat-label>Host</mat-label>
+      <input matInput type="text" formControlName="host" />
+    </mat-form-field>
+    <mat-form-field fxFlex="50">
+      <mat-label>Port</mat-label>
+      <input matInput type="number" formControlName="port" />
+    </mat-form-field>
+  </div>
+  <div fxLayout="row" fxFill fxLayoutGap="1rem">
+    <mat-form-field fxFlex="30">
+      <mat-label>Heartbeat Delay (in seconds)</mat-label>
+      <input matInput type="number" formControlName="heartbeatSeconds" />
+    </mat-form-field>
+    <mat-form-field fxFlex="20" *ngIf="form.get('heartbeatSeconds').value > 0">
+      <mat-label>Number</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="heartbeatNumber"
+        placeholder="0"
+      />
+    </mat-form-field>
+    <mat-form-field fxFlex="50" *ngIf="form.get('heartbeatSeconds').value > 0">
+      <mat-label>Message</mat-label>
+      <input
+        matInput
+        type="text"
+        formControlName="heartbeatMessage"
+        placeholder="HEARTBEAT"
+      />
+    </mat-form-field>
+  </div>
+  <div fxLayout="row" fxLayoutGap="1rem">
+    <button mat-raised-button type="submit" color="primary">Save</button>
+    <button mat-raised-button type="button" (click)="onReset()">Reset</button>
+  </div>
+</form>

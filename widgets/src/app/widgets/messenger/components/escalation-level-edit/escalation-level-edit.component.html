@@ -1,0 +1,170 @@
+<div class="bordered" *ngIf="selectedLevel$ | async as selectedLevel">
+  <form [formGroup]="formGroup">
+    <mat-tab-group>
+      <mat-tab label="Details">
+        <div class="level-tab" fxLayout="column" fxLayoutGap="1rem">
+          <div fxLayout="row" fxLayoutGap="2rem">
+            <mat-form-field appearance="fill" fxFlex="50">
+              <mat-label>Name</mat-label>
+              <input
+                matInput
+                type="text"
+                [formControlName]="cls.FC_NAME"
+                [value]="selectedLevel.name"
+              />
+            </mat-form-field>
+            <mat-form-field appearance="fill" fxFlex="50">
+              <mat-label>Next Level</mat-label>
+              <mat-select [formControlName]="cls.FC_NEXT">
+                <mat-option value="">[None]</mat-option>
+                <mat-option
+                  *ngFor="let levelName of allLevelNames$ | async"
+                  [value]="levelName"
+                  >{{ levelName }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutGap="2rem">
+            <mat-form-field appearance="fill" fxFlex="50">
+              <mat-label>Timeout</mat-label>
+              <input
+                matInput
+                type="number"
+                [formControlName]="cls.FC_TIMEOUT"
+                [value]="selectedLevel.timeout.toString()"
+              />
+            </mat-form-field>
+            <mat-form-field
+              appearance="fill"
+              hintLabel="Use value 0 for disabled."
+              fxFlex="50"
+            >
+              <mat-label>Accepted Timeout</mat-label>
+              <input
+                matInput
+                type="number"
+                [formControlName]="cls.FC_ACCEPTED_TIMEOUT"
+                [value]="selectedLevel.acceptedTimeout.toString()"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Alarms">
+        <div class="level-tab">
+          <mat-selection-list (selectionChange)="alarmSelectionChange($event)">
+            <mat-list-option
+              *ngFor="let alarmType of allAlarmTypes$ | async"
+              [selected]="selectedLevel.alarms.indexOf(alarmType) !== -1"
+              [value]="alarmType"
+            >
+              {{ alarmType }}
+            </mat-list-option>
+            <mat-list-option
+              disabled
+              *ngIf="(allAlarmTypes$ | async).length === 0"
+              >No alarm types to list
+            </mat-list-option>
+          </mat-selection-list>
+        </div>
+      </mat-tab>
+      <mat-tab label="Groups">
+        <div class="level-tab">
+          <mat-selection-list (selectionChange)="groupSelectionChange($event)">
+            <mat-list-option
+              *ngFor="let groupName of allGroupNames$ | async"
+              [selected]="selectedLevel.groups.indexOf(groupName) !== -1"
+              [value]="groupName"
+            >
+              {{ groupName }}
+            </mat-list-option>
+            <mat-list-option
+              disabled
+              *ngIf="(allGroupNames$ | async).length === 0"
+              >No groups to list
+            </mat-list-option>
+          </mat-selection-list>
+        </div>
+      </mat-tab>
+      <mat-tab label="Devices">
+        <div class="level-tab">
+          <mat-selection-list (selectionChange)="deviceSelectionChange($event)">
+            <mat-list-option
+              *ngFor="let device of allDevices$ | async"
+              [selected]="selectedLevel.devices.indexOf(device.id) !== -1"
+              [value]="device.id"
+            >
+              {{ device.name }}
+            </mat-list-option>
+          </mat-selection-list>
+        </div>
+      </mat-tab>
+      <mat-tab label="Messages">
+        <div class="level-tab">
+          <mat-form-field appearance="fill">
+            <mat-label>Language to Edit</mat-label>
+            <!--            <mat-select [value]="cls.DEFAULT_LANGUAGE" (selectionChange)="languageSelectionChange($event)">-->
+            <!--              <mat-option *ngFor="let lang of cls.LANGUAGES" [value]="lang[0]">{{ lang[1] }}</mat-option>-->
+            <!--            </mat-select>-->
+            <mat-select [(value)]="selectedLanguage">
+              <mat-option *ngFor="let lang of cls.LANGUAGES" [value]="lang.id"
+                >{{ lang.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div fxLayout="column">
+            <mat-form-field appearance="fill" class="pt-1">
+              <mat-label>Dispatch Template</mat-label>
+              <input
+                matInput
+                type="text"
+                [formControlName]="cls.FC_DISPATCH_TEMPLATE"
+                [value]="selectedLevel.dispatch[selectedLanguage]"
+              />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="pt-1">
+              <mat-label>Accept Template</mat-label>
+              <input
+                matInput
+                type="text"
+                [formControlName]="cls.FC_ACCEPT_TEMPLATE"
+                [value]="selectedLevel.accept[selectedLanguage]"
+              />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="pt-1">
+              <mat-label>Cancel Template</mat-label>
+              <input
+                matInput
+                type="text"
+                [formControlName]="cls.FC_CANCEL_TEMPLATE"
+                [value]="selectedLevel.cancel[selectedLanguage]"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Usage">
+        <div class="level-tab">
+          <mat-list role="list">
+            <mat-list-item
+              role="listitem"
+              *ngFor="let level of usedByLevels$ | async; index as i"
+            >
+              <span>
+                <em style="margin-right: 0.8rem">{{ i + 1 }}.</em>
+                {{ level.name }}
+              </span>
+            </mat-list-item>
+            <mat-list-item
+              role="listitem"
+              *ngIf="(usedByLevels$ | async).length === 0"
+            >
+              <span> <em style="margin-right: 0.8rem">0</em>Not used. </span>
+            </mat-list-item>
+          </mat-list>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </form>
+</div>

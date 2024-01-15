@@ -1,0 +1,36 @@
+.title-block {
+  color: white;
+  background-color: #305680;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+}
+
+.font-xl {
+  font-size: x-large
+}
+
+.no-box-shadow {
+  box-shadow: none
+}
+
+.modal-title {
+
+  padding: 0.5rem;
+  font-size: x-large
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.close-button {
+  float: right;
+  margin-top: -0.65rem;
+}
+
+.inactive {
+  color: #f44336;
+  font-style: italic;
+}

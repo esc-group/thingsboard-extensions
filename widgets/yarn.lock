@@ -1636,13 +1636,6 @@
   dependencies:
     tslib "^2.2.0"
 
-"@fullcalendar/angular@^6.1.5":
-  version "6.1.7"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/angular/-/angular-6.1.7.tgz#a3206c9a46343532cd25570c53d92a241359d886"
-  integrity sha512-qjRWcow1t4OsK7JTDDlMw9nEsy43uHyBllPv3zv25ecL4+YGFDuT++UL66vuwO1ylKtlod8Cf398uG8WzNa83g==
-  dependencies:
-    tslib "^2.3.0"
-
 "@gar/promisify@^1.1.3":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"
@@ -8919,9 +8912,9 @@ text-table@0.2.0, text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==
 
-"thingsboard@https://github.com/thingsboard/thingsboard-pe-ui-types.git#release/3.6.2":
+"thingsboard@https://github.com/thingsboard/thingsboard-ui-types.git#release/3.6.2":
   version "3.6.2"
-  resolved "https://github.com/thingsboard/thingsboard-pe-ui-types.git#cc07a8bdfeb72e0fe1a9e4a390be106aceff92e5"
+  resolved "https://github.com/thingsboard/thingsboard-ui-types.git#db9a11f52e48ecc4bda52127b0cc974d06e4694f"
   dependencies:
     "@angular/animations" "^15.2.9"
     "@angular/cdk" "^15.2.9"
@@ -8934,7 +8927,6 @@ text-table@0.2.0, text-table@^0.2.0:
     "@angular/router" "^15.2.9"
     "@flowjs/flow.js" "^2.14.1"
     "@flowjs/ngx-flow" "~0.6.0"
-    "@fullcalendar/angular" "^6.1.5"
     "@iplab/ngx-color-picker" "^15.0.2"
     "@mat-datetimepicker/core" "~11.0.3"
     "@ngrx/store" "^15.4.0"

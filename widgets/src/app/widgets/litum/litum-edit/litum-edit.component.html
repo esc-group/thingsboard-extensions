@@ -1,0 +1,51 @@
+<mat-accordion multi>
+  <mat-expansion-panel expanded>
+    <mat-expansion-panel-header>
+      <mat-panel-title>Alarm Generation Triggers</mat-panel-title>
+    </mat-expansion-panel-header>
+    <ats-alarm-type-edit
+      #userAlarmTypes
+      (change)="userAlarmTypesChanged()"
+    ></ats-alarm-type-edit>
+    <p *ngIf="isLoadingBusinessRules$ | async">Loading...</p>
+    <p class="error" *ngIf="businessRulesError$ | async">
+      {{ businessRulesError$ | async }}
+    </p>
+    <ng-container *ngIf="!(isLoadingBusinessRules$ | async)">
+      <ng-container *ngIf="!(businessRulesError$ | async)">
+        <ats-litum-triggers-edit
+          [rules]="allBusinessRules$ | async"
+          [alarmTypes]="combinedAlarmTypes$ | async"
+          [config]="triggersConfig$ | async"
+          (save)="onTriggersSave($event)"
+        ></ats-litum-triggers-edit>
+      </ng-container>
+    </ng-container>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title
+        >Litum 3rd Party Web Server Configuration
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <p *ngIf="isLoadingLitumConfig$ | async">Loading...</p>
+    <ats-litum-config-edit
+      *ngIf="!(isLoadingLitumConfig$ | async)"
+      [config]="litumConfig$ | async"
+      (save)="onLitumSave($event)"
+    ></ats-litum-config-edit>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>ThingsBoard Gateway Configuration</mat-panel-title>
+    </mat-expansion-panel-header>
+    <p *ngIf="isLoadingGatewayConfig$ | async">Loading...</p>
+    <ats-litum-gateway-edit
+      *ngIf="!(isLoadingGatewayConfig$ | async)"
+      [config]="gatewayConfig$ | async"
+      (save)="onGatewaySave($event)"
+    ></ats-litum-gateway-edit>
+  </mat-expansion-panel>
+</mat-accordion>

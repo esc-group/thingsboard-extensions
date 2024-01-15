@@ -1,0 +1,19 @@
+<div fxLayout="row" fxFill fxLayoutGap="1rem">
+  <mat-form-field fxFlex="60">
+    <mat-label>Pager Name</mat-label>
+    <input matInput #tapName placeholder="My Pager" />
+  </mat-form-field>
+
+  <mat-form-field fxFlex="30">
+    <mat-label>Pager Number</mat-label>
+    <input matInput #tapNumber placeholder="1234" />
+  </mat-form-field>
+
+  <button
+    mat-icon-button
+    (click)="onClick(tapName.value, tapNumber.value)"
+    [disabled]="tapName.value.length === 0 || tapNumber.value.length === 0"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
