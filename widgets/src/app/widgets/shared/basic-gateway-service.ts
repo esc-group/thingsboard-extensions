@@ -1,0 +1,168 @@
+import {
+  AlarmService,
+  AttributeService,
+  DeviceService,
+  EntityService,
+} from "@core/public-api";
+import {
+  AlarmInfo,
+  AlarmQuery,
+  AliasFilterType,
+  AttributeData,
+  AttributeScope,
+  EntityType,
+  RpcStatus,
+  TimePageLink,
+  TimeseriesData,
+} from "@shared/public-api";
+import { Observable } from "rxjs";
+import * as op from "rxjs/operators";
+import { BasicRpcResponse } from "./models";
+
+export class BasicGatewayService {
+  constructor(
+    protected alarmService: AlarmService,
+    protected attributeService: AttributeService,
+    protected entityService: EntityService,
+    protected deviceService: DeviceService
+  ) {}
+
+  getGatewayId(entityName: string): Observable<string> {
+    return this.entityService
+      .findSingleEntityInfoByEntityFilter({
+        type: AliasFilterType.entityName,
+        entityType: EntityType.DEVICE,
+        entityNameFilter: entityName,
+      })
+      .pipe(
+        op.first(),
+        op.map((entityInfo) => entityInfo.id)
+      );
+  }
+
+  getAlarmTypes(daysBackToCheck: number): Observable<string[]> {
+    const startTime = new Date().getTime() - daysBackToCheck * 86_400_000;
+    // WARNING: ThingsBoard's AlarmQuery class does not match JSON schema of Java Controller
+    const pageLink = new TimePageLink(32, 0, undefined, undefined, startTime);
+    const query = new AlarmQuery(
+      undefined,
+      pageLink,
+      undefined,
+      undefined,
+      false
+    );
+    return this.alarmService.getAllAlarms(query).pipe(
+      op.first(),
+      op.map((pageData) => {
+        const alarmTypesSet = new Set<string>();
+        pageData.data.forEach((alarm: AlarmInfo) =>
+          alarmTypesSet.add(alarm.type)
+        );
+        return Array.from(alarmTypesSet.values());
+      })
+    );
+  }
+
+  protected getSingleAttribute<T>(
+    id: string,
+    attributeName: string
+  ): Observable<T> {
+    return this.attributeService
+      .getEntityAttributes(
+        { id: id, entityType: EntityType.DEVICE },
+        AttributeScope.CLIENT_SCOPE,
+        [attributeName]
+      )
+      .pipe(
+        op.first(),
+        op.map((attributeData: AttributeData[]) => {
+          if (attributeData.length === 0) {
+            throw new Error(`'${attributeName}' attribute not found`);
+          } else {
+            let value = attributeData[0].value;
+            const isJsonValue = Boolean(
+              typeof value === "string" &&
+                ((value[0] === "{" && value[value.length - 1] === "}") ||
+                  (value[0] === "[" && value[value.length - 1] == "]"))
+            );
+            if (isJsonValue) value = JSON.parse(value);
+            return value as T;
+          }
+        })
+      );
+  }
+
+  protected setSingleAttribute(
+    id: string,
+    attributeName: string,
+    value: any
+  ): Observable<any> {
+    return this.attributeService
+      .saveEntityAttributes(
+        { id: id, entityType: EntityType.DEVICE },
+        AttributeScope.SHARED_SCOPE,
+        [{ key: attributeName, value: value }]
+      )
+      .pipe(op.first());
+  }
+
+  protected getSingleTimeSeries<T>(
+    id: string,
+    attributeName: string
+  ): Observable<T> {
+    return this.attributeService
+      .getEntityTimeseriesLatest({ id: id, entityType: EntityType.DEVICE }, [
+        attributeName,
+      ])
+      .pipe(
+        op.first(),
+        op.map((data: TimeseriesData) => {
+          return data[attributeName][0].value as T;
+        })
+      );
+  }
+
+  protected getConfigValueByRpc<T>(
+    id: string,
+    method: string,
+    timeout: number = 5e3
+  ): Observable<T> {
+    const delay = 250; // milliseconds
+    const retries = Math.ceil(timeout / delay);
+    return this.deviceService
+      .sendTwoWayRpcCommand(id, {
+        method,
+        params: {},
+        timeout,
+        persistent: true,
+      })
+      .pipe(
+        op.delay(delay),
+        op.switchMap((response) =>
+          this.deviceService.getPersistedRpc(response["rpcId"])
+        ),
+        op.map((rpc) => {
+          if (rpc.status === RpcStatus.SUCCESSFUL) return rpc.response;
+          throw new Error(
+            `RPC ${rpc.request.body.method} status is ${rpc.status} (not successful)`
+          );
+        }),
+        op.retry(retries),
+        op.first()
+      );
+  }
+
+  protected setConfigValueByRpc(
+    id: string,
+    method: string,
+    params: any
+  ): Observable<string> {
+    return this.deviceService.sendTwoWayRpcCommand(id, { method, params }).pipe(
+      op.first(),
+      op.map((response: BasicRpcResponse) => {
+        if (response.error) throw new Error(response.message);
+        return response.message;
+      })
+    );
+  }
+}
