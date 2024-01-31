@@ -3,6 +3,8 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
+  OnInit,
   Output,
   SimpleChanges,
 } from "@angular/core";
@@ -14,16 +16,24 @@ import {
 import { MatSelectionListChange } from "@angular/material/list";
 import { FormControl, Validators } from "@angular/forms";
 import * as op from "rxjs/operators";
+import * as EscalationActions from "../../store/actions";
+import { Store } from "@ngrx/store";
+import { AppState } from "@core/core.state";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "ats-escalation-group-edit",
   templateUrl: "./escalation-group-edit.component.html",
   styleUrls: ["./escalation-group-edit.component.scss"],
 })
-export class EscalationGroupEditComponent implements OnChanges {
+export class EscalationGroupEditComponent
+  implements OnChanges, OnInit, OnDestroy
+{
   @Input() usedByLevels: UiEscalationLevel[];
   @Input() group?: UiEscalationGroup;
   @Input() devices: SubEntity[];
+
+  protected subscriptions: Subscription[] = [];
 
   fcName = new FormControl(this.group?.name, [
     Validators.required,
@@ -38,7 +48,7 @@ export class EscalationGroupEditComponent implements OnChanges {
   @Output() deviceAdded = new EventEmitter<SubEntity>();
   @Output() deviceRemoved = new EventEmitter<SubEntity>();
 
-  constructor() {}
+  constructor(protected store: Store<AppState>) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log("EGE ngOnChanges", changes);
@@ -59,4 +69,23 @@ export class EscalationGroupEditComponent implements OnChanges {
       }
     });
   }
+
+  ngOnInit(): void {
+    this.subscriptions.push(
+      this.fcName.valueChanges
+        .pipe(op.debounceTime(750))
+        .subscribe(this.setGroupName)
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+  }
+
+  setGroupName = (name: string): void => {
+    if (this.fcName.valid) {
+      console.log("group name is now " + name);
+      this.store.dispatch(EscalationActions.setGroupName({ name }));
+    }
+  };
 }

@@ -100,6 +100,10 @@ export const setLevelName = createAction(
   "[Escalation] set level name",
   props<{ name: string }>()
 );
+export const setGroupName = createAction(
+  "[Escalation] set group name",
+  props<{ name: string }>()
+);
 export const setRecentAlarmTypes = createAction(
   "[Escalation] setRecentAlarmTypes",
   props<{ alarmTypes: string[] }>()

@@ -4,6 +4,7 @@ import * as EscalationActions from "./actions";
 import {
   Entity,
   initialState,
+  State,
   UiEscalationGroup,
   UiEscalationLevel,
 } from "./state";
@@ -292,6 +293,28 @@ export const escalationReducer = createReducer(
           }
     );
     return { ...state, levels, selectedLevel };
+  }),
+  on(EscalationActions.setGroupName, (state: State, { name }): State => {
+    if (state.selectedGroup === null) {
+      return state;
+    }
+    const oldName = state.selectedGroup.name;
+    const selectedGroup: UiEscalationGroup = { ...state.selectedGroup, name };
+    const groups = state.groups.map(
+      (group: UiEscalationGroup): UiEscalationGroup =>
+        group.id === state.selectedGroup.id ? selectedGroup : group
+    );
+    const levels = state.levels.map(
+      (level: UiEscalationLevel): UiEscalationLevel => ({
+        ...level,
+        groups: level.groups.map((group) => (group === oldName ? name : group)),
+      })
+    );
+    const selectedLevel =
+      state.selectedLevel === null
+        ? null
+        : levels.filter((level) => level.id === state.selectedLevel.id)[0];
+    return { ...state, levels, groups, selectedGroup, selectedLevel };
   }),
   on(EscalationActions.patchLevel, (state, { patch }) => {
     if (Object.keys(patch).indexOf("name") !== -1) {
