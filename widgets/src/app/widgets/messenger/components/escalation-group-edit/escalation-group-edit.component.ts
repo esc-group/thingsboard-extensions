@@ -53,8 +53,9 @@ export class EscalationGroupEditComponent
   ngOnChanges(changes: SimpleChanges): void {
     console.log("EGE ngOnChanges", changes);
     if (changes.hasOwnProperty("group")) {
-      // console.log('ngOnChanges() group', changes.group.currentValue)
-      this.fcName.setValue(changes.group.currentValue?.name);
+      // prevents endless loop
+      if (this.fcName.value !== changes.group.currentValue.name)
+        this.fcName.setValue(changes.group.currentValue.name);
     }
   }
 
