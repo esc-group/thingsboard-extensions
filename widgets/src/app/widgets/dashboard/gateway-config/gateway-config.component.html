@@ -4,7 +4,7 @@
   fxLayoutGap="1rem"
   fxLayoutAlign="space-between center"
 >
-  <div class="font-xl" [class.inactive]="inactive$ | async">
+  <div #title class="title-text" [class.inactive]="inactive$ | async">
     {{ title$ | async }}
   </div>
   <button
