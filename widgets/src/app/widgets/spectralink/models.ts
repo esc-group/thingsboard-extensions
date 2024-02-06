@@ -9,3 +9,10 @@ export interface HandsetConfig {
   username: string;
   password: string;
 }
+
+export interface ProgramHandsetRpc {
+  ipAddress: string;
+  extension: number;
+  username: string;
+  password: string;
+}

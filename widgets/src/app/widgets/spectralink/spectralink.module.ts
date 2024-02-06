@@ -12,14 +12,16 @@ import { SpectralinkEditComponent } from "./spectralink-edit/spectralink-edit.co
 import { SpectralinkHandsetEditComponent } from "./spectralink-handset-edit/spectralink-handset-edit.component";
 import { SpectralinkServerEditComponent } from "./spectralink-server-edit/spectralink-server-edit.component";
 import { SpectralinkService } from "./spectralink.service";
+import { SpectralinkProgramComponent } from "./spectralink-program/spectralink-program.component";
 
 @NgModule({
   declarations: [
     SpectralinkEditComponent,
     SpectralinkServerEditComponent,
     SpectralinkHandsetEditComponent,
+    SpectralinkProgramComponent,
   ],
-  exports: [SpectralinkEditComponent],
+  exports: [SpectralinkEditComponent, SpectralinkProgramComponent],
   providers: [SpectralinkService],
   imports: [
     CommonModule,

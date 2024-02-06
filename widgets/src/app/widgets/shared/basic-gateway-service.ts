@@ -11,11 +11,12 @@ import {
   AttributeData,
   AttributeScope,
   EntityType,
+  PersistentRpc,
   RpcStatus,
   TimePageLink,
   TimeseriesData,
 } from "@shared/public-api";
-import { Observable } from "rxjs";
+import { interval, Observable, of } from "rxjs";
 import * as op from "rxjs/operators";
 import { BasicRpcResponse } from "./models";
 
@@ -122,34 +123,54 @@ export class BasicGatewayService {
       );
   }
 
+  protected doRpc<T>(
+    id: string,
+    method: string,
+    params: object,
+    timeout: number = 28e3 // milliseconds
+  ): Observable<T> {
+    const delay = 250; // milliseconds
+    const start = new Date() as any as number;
+    return this.deviceService
+      .sendTwoWayRpcCommand(id, {
+        method: method,
+        params: params,
+        timeout: timeout,
+        persistent: true,
+      })
+      .pipe(
+        op.first(),
+        op.delay(delay),
+        op.exhaustMap((response) =>
+          this.deviceService.getPersistedRpc(response["rpcId"]).pipe(
+            op.first(),
+            op.delayWhen((rpc: PersistentRpc) =>
+              interval(rpc.status === RpcStatus.SUCCESSFUL ? 0 : delay)
+            ),
+            op.map((rpc: PersistentRpc) => {
+              if (rpc.status !== RpcStatus.SUCCESSFUL)
+                throw new Error("RPC result not yet ready"); // kicks in retry below
+              return rpc.response as T; // passes through retry below
+            }),
+            op.retry({
+              delay: () => {
+                /* only retry when we haven't run out of time */
+                const elapsed = (new Date() as any as number) - start;
+                if (timeout - elapsed <= 0) throw new Error("RPC timed out"); // do not retry
+                return of(null); // retry
+              },
+            })
+          )
+        )
+      );
+  }
+
   protected getConfigValueByRpc<T>(
     id: string,
     method: string,
     timeout: number = 5e3
   ): Observable<T> {
-    const delay = 250; // milliseconds
-    const retries = Math.ceil(timeout / delay);
-    return this.deviceService
-      .sendTwoWayRpcCommand(id, {
-        method,
-        params: {},
-        timeout,
-        persistent: true,
-      })
-      .pipe(
-        op.delay(delay),
-        op.switchMap((response) =>
-          this.deviceService.getPersistedRpc(response["rpcId"])
-        ),
-        op.map((rpc) => {
-          if (rpc.status === RpcStatus.SUCCESSFUL) return rpc.response;
-          throw new Error(
-            `RPC ${rpc.request.body.method} status is ${rpc.status} (not successful)`
-          );
-        }),
-        op.retry(retries),
-        op.first()
-      );
+    return this.doRpc<T>(id, method, {}, timeout);
   }
 
   protected setConfigValueByRpc(

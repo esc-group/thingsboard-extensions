@@ -1,12 +1,9 @@
-<mat-accordion>
-  <mat-expansion-panel *ngIf="serverConfig$ | async as serverConfig">
+<mat-accordion multi>
+  <mat-expansion-panel expanded>
     <mat-expansion-panel-header>
-      <mat-panel-title>Server Configuration</mat-panel-title>
+      <mat-panel-title>Program Handsets</mat-panel-title>
     </mat-expansion-panel-header>
-    <ats-spectralink-server-edit
-      [config]="serverConfig"
-      (save)="onServerConfigSave($event)"
-    ></ats-spectralink-server-edit>
+    <ats-spectralink-program [gatewayId]="gatewayId$.value"></ats-spectralink-program>
   </mat-expansion-panel>
   <mat-expansion-panel *ngIf="handsetConfig$ | async as handsetConfig" expanded>
     <mat-expansion-panel-header>
@@ -16,5 +13,14 @@
       [config]="handsetConfig"
       (save)="onHandsetConfigSave($event)"
     ></ats-spectralink-handset-edit>
+  </mat-expansion-panel>
+  <mat-expansion-panel *ngIf="serverConfig$ | async as serverConfig">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Server Configuration</mat-panel-title>
+    </mat-expansion-panel-header>
+    <ats-spectralink-server-edit
+      [config]="serverConfig"
+      (save)="onServerConfigSave($event)"
+    ></ats-spectralink-server-edit>
   </mat-expansion-panel>
 </mat-accordion>

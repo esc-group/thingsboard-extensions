@@ -7,7 +7,7 @@ import {
 } from "@core/public-api";
 import { Observable } from "rxjs";
 import { BasicGatewayService } from "../shared/basic-gateway-service";
-import { HandsetConfig, ServerConfig } from "./models";
+import { HandsetConfig, ProgramHandsetRpc, ServerConfig } from "./models";
 
 const GET_SERVER_CONFIG_RPC = "get_handset_server";
 const SET_SERVER_CONFIG_RPC = "set_handset_server";
@@ -46,5 +46,12 @@ export class SpectralinkService extends BasicGatewayService {
 
   setHandsetConfig(gatewayId: string, config: HandsetConfig): Observable<any> {
     return this.setConfigValueByRpc(gatewayId, SET_CLIENT_CONFIG_RPC, config);
+  }
+
+  programHandset(
+    gatewayId: string,
+    handset: ProgramHandsetRpc
+  ): Observable<boolean> {
+    return this.doRpc<boolean>(gatewayId, "program_handset", handset, 12e3);
   }
 }
