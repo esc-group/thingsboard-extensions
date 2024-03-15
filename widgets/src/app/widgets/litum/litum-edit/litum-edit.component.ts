@@ -1,38 +1,23 @@
-import {
-  Component,
-  ElementRef,
-  Inject,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from "@angular/core";
-import { AppState } from "@core/core.state";
-import { WidgetContext } from "@home/models/widget-component.models";
-import { Store } from "@ngrx/store";
-import { PageComponent } from "@shared/public-api";
-import { BehaviorSubject, forkJoin, of, Subscription } from "rxjs";
-import * as op from "rxjs/operators";
-import { AlarmTypeEditComponent } from "../../alarm/alarm-type-edit/alarm-type-edit.component";
-import { LitumService } from "../litum.service";
-import {
-  BusinessRule,
-  BusinessRuleMap,
-  GatewayConfig,
-  LitumConfig,
-} from "../models";
+import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AppState } from '@core/core.state';
+import { WidgetContext } from '@home/models/widget-component.models';
+import { Store } from '@ngrx/store';
+import { PageComponent } from '@shared/public-api';
+import { BehaviorSubject, forkJoin, of, Subscription } from 'rxjs';
+import * as op from 'rxjs/operators';
+import { AlarmTypeEditComponent } from '../../alarm/alarm-type-edit/alarm-type-edit.component';
+import { LitumService } from '../litum.service';
+import { BusinessRule, GatewayConfig, LitumConfig, AlarmConfig } from '../models';
 
 @Component({
-  selector: "ats-litum-edit",
-  templateUrl: "./litum-edit.component.html",
-  styleUrls: ["./litum-edit.component.scss"],
+  selector: 'ats-litum-edit',
+  templateUrl: './litum-edit.component.html',
+  styleUrls: ['./litum-edit.component.scss'],
 })
-export class LitumEditComponent
-  extends PageComponent
-  implements OnInit, OnDestroy
-{
-  @ViewChild("businessRulesError")
+export class LitumEditComponent extends PageComponent implements OnInit, OnDestroy {
+  @ViewChild('businessRulesError')
   businessRulesError: ElementRef<HTMLParagraphElement>;
-  @ViewChild("userAlarmTypes") userAlarmTypes: AlarmTypeEditComponent;
+  @ViewChild('userAlarmTypes') userAlarmTypes: AlarmTypeEditComponent;
 
   protected subscriptions: Subscription[] = [];
   protected gatewayName: string;
@@ -42,9 +27,9 @@ export class LitumEditComponent
   isLoadingGatewayConfig$ = new BehaviorSubject<boolean>(true);
   isLoadingBusinessRules$ = new BehaviorSubject<boolean>(true);
   isSaving$ = new BehaviorSubject<boolean>(false);
-  businessRulesError$ = new BehaviorSubject<string>("");
-  litumId$ = new BehaviorSubject<string>("");
-  triggersConfig$ = new BehaviorSubject<BusinessRuleMap>(null);
+  businessRulesError$ = new BehaviorSubject<string>('');
+  litumId$ = new BehaviorSubject<string>('');
+  triggersConfig$ = new BehaviorSubject<AlarmConfig[]>(null);
   userAlarmTypes$ = new BehaviorSubject<string[]>([]);
   recentAlarmTypes$ = new BehaviorSubject<string[]>([]);
   configuredAlarmTypes$ = new BehaviorSubject<string[]>([]);
@@ -56,8 +41,8 @@ export class LitumEditComponent
   constructor(
     protected store: Store<AppState>,
     private litumService: LitumService,
-    @Inject("widgetContext") widgetContext: any, // proper type hint here will break the module
-    @Inject("gatewayName") gatewayName: string
+    @Inject('widgetContext') widgetContext: any, // proper type hint here will break the module
+    @Inject('gatewayName') gatewayName: string
   ) {
     super(store);
     this.gatewayName = gatewayName;
@@ -79,33 +64,24 @@ export class LitumEditComponent
 
   recalculateAlarmTypes = () => {
     const combinedAlarmTypes = Array.from(
-      new Set([
-        ...this.recentAlarmTypes$.value,
-        ...this.userAlarmTypes$.value,
-        ...this.configuredAlarmTypes$.value,
-      ])
+      new Set([...this.recentAlarmTypes$.value, ...this.userAlarmTypes$.value, ...this.configuredAlarmTypes$.value])
     ).sort();
     this.combinedAlarmTypes$.next(combinedAlarmTypes);
   };
 
-  businessRuleMapChanged = (businessRuleMap: BusinessRuleMap) => {
-    if (businessRuleMap !== null) {
-      const alarmTypes = Object.values(businessRuleMap).map(
-        (item) => item.type
-      );
-      this.configuredAlarmTypes$.next(alarmTypes);
-    }
+  alarmConfigChanged = (alarmConfig: AlarmConfig[]) => {
+    if (alarmConfig !== null) this.configuredAlarmTypes$.next(alarmConfig.map((item: AlarmConfig) => item.alarmType));
   };
 
   loadFromService = (): void => {
     this.userAlarmTypes$.subscribe(this.recalculateAlarmTypes);
     this.recentAlarmTypes$.subscribe(this.recalculateAlarmTypes);
     this.configuredAlarmTypes$.subscribe(this.recalculateAlarmTypes);
-    this.triggersConfig$.subscribe(this.businessRuleMapChanged);
+    this.triggersConfig$.subscribe(this.alarmConfigChanged);
     this.isLoadingLitumConfig$.next(true);
     this.isLoadingGatewayConfig$.next(true);
     this.isLoadingBusinessRules$.next(true);
-    this.businessRulesError$.next("");
+    this.businessRulesError$.next('');
     const subscription = this.litumService
       .getGatewayId(this.gatewayName)
       .pipe(
@@ -131,16 +107,8 @@ export class LitumEditComponent
                 this.allBusinessRules$.next(businessRules);
               }),
               op.catchError((err) => {
-                const errorMessage =
-                  "Unable to retrieve business rules from remote Litum server.";
-                this.ctx.showToast(
-                  "error",
-                  errorMessage,
-                  3000,
-                  "top",
-                  "center",
-                  "dashboardDialog"
-                );
+                const errorMessage = 'Unable to retrieve business rules from remote Litum server.';
+                this.ctx.showToast('error', errorMessage, 3000, 'top', 'center', 'dashboardDialog');
                 this.businessRulesError$.next(errorMessage);
                 return of(err);
               })
@@ -150,9 +118,10 @@ export class LitumEditComponent
                 this.recentAlarmTypes$.next(alarmTypes);
               })
             ),
-            this.litumService.getBusinessRuleMap(litumId).pipe(
-              op.tap((businessRuleMap: BusinessRuleMap) => {
-                this.triggersConfig$.next(businessRuleMap);
+            this.litumService.getAlarmConfig(litumId).pipe(
+              op.tap((config: AlarmConfig[]) => {
+                console.log('litumService.getAlarmConfig tap', config);
+                this.triggersConfig$.next(config);
               })
             ),
           ])
@@ -160,7 +129,7 @@ export class LitumEditComponent
       )
       .subscribe({
         next: () => {
-          console.log("!!!!!!!!!!!!!! next");
+          console.log('!!!!!!!!!!!!!! next');
           this.isLoadingBusinessRules$.next(false);
         },
         error: (error: Error) => {
@@ -169,64 +138,44 @@ export class LitumEditComponent
           //this.ctx.showToast("error", `Load failure: ${error.message}`, 3000, "bottom", "center", "dashboardDialog")
         },
         complete: () => {
-          console.log("!!!!!!!!!!!!!! complete");
+          console.log('!!!!!!!!!!!!!! complete');
           subscription.unsubscribe();
         },
       });
   };
 
-  onTriggersSave = (config: BusinessRuleMap): void => {
+  onTriggersSave = (config: AlarmConfig[]): void => {
     if (this.isSaving$.value) return;
     this.isSaving$.next(true);
-    const saveSubscription = this.litumService
-      .setBusinessRuleMap(this.litumId$.value, config)
-      .subscribe({
-        next: () => {
-          this.ctx.showToast(
-            "warn",
-            "Save success",
-            3000,
-            "bottom",
-            "center",
-            "dashboardDialog"
-          );
-          this.triggersConfig$.next(config);
-        },
-        error: (error: Error) => {
-          this.ctx.showToast(
-            "error",
-            "Save failed",
-            3000,
-            "bottom",
-            "center",
-            "dashboardDialog"
-          );
-          const errors = JSON.parse(error.message); // todo match up errors with form widgets and put them on-screen
-        },
-        complete: () => {
-          this.isSaving$.next(false);
-          saveSubscription.unsubscribe();
-        },
-      });
+    const saveSubscription = this.litumService.setAlarmConfig(this.litumId$.value, config).subscribe({
+      next: () => {
+        this.ctx.showToast('warn', 'Save success', 3000, 'bottom', 'center', 'dashboardDialog');
+        this.triggersConfig$.next(config);
+      },
+      error: (error: Error) => {
+        this.ctx.showToast('error', 'Save failed', 3000, 'bottom', 'center', 'dashboardDialog');
+        const errors = JSON.parse(error.message); // todo match up errors with form widgets and put them on-screen
+      },
+      complete: () => {
+        this.isSaving$.next(false);
+        saveSubscription.unsubscribe();
+      },
+    });
   };
 
   onGatewaySave = (config: GatewayConfig): void => {
-    const saveSubscription = this.litumService
-      .setGatewayConfig(this.litumId$.value, config)
-      .subscribe({
-        complete: () => {
-          saveSubscription.unsubscribe();
-        },
-      });
+    const saveSubscription = this.litumService.setGatewayConfig(this.litumId$.value, config).subscribe({
+      complete: () => {
+        saveSubscription.unsubscribe();
+      },
+    });
   };
 
   onLitumSave = (config: LitumConfig): void => {
-    const saveSubscription = this.litumService
-      .setLitumConfig(this.litumId$.value, config)
-      .subscribe({
-        complete: () => {
-          saveSubscription.unsubscribe();
-        },
-      });
+    const saveSubscription = this.litumService.setLitumConfig(this.litumId$.value, config).subscribe({
+      complete: () => {
+        saveSubscription.unsubscribe();
+      },
+    });
   };
 }

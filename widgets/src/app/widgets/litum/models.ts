@@ -6,17 +6,13 @@ export interface BusinessRule {
 }
 
 export interface AlarmConfig {
-  type: string;
-  severity: AlarmSeverity;
-}
-
-export type BusinessRuleMap = Record<number, AlarmConfig>;
-
-export interface UiBusinessRule {
   businessRuleId: number;
-  businessRuleName: string;
   alarmType: string;
   alarmSeverity: AlarmSeverity;
+}
+
+export interface UiAlarmConfig extends AlarmConfig {
+  businessRuleName: string;
 }
 
 export interface LitumConfig {

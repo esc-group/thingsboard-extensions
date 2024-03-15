@@ -11,27 +11,25 @@
     <p class="error" *ngIf="businessRulesError$ | async">
       {{ businessRulesError$ | async }}
     </p>
-    <ng-container *ngIf="!(isLoadingBusinessRules$ | async)">
-      <ng-container *ngIf="!(businessRulesError$ | async)">
-        <ats-litum-triggers-edit
-          [rules]="allBusinessRules$ | async"
-          [alarmTypes]="combinedAlarmTypes$ | async"
-          [config]="triggersConfig$ | async"
-          (save)="onTriggersSave($event)"
-        ></ats-litum-triggers-edit>
-      </ng-container>
+    <ng-container *ngIf="(isLoadingBusinessRules$ | async) === false">
+      <ats-litum-triggers-edit
+        [businessRules]="allBusinessRules$ | async"
+        [alarmTypes]="combinedAlarmTypes$ | async"
+        [alarmConfig]="triggersConfig$ | async"
+        (save)="onTriggersSave($event)"
+      ></ats-litum-triggers-edit>
     </ng-container>
   </mat-expansion-panel>
 
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title
-        >Litum 3rd Party Web Server Configuration
+      >Litum 3rd Party Web Server Configuration
       </mat-panel-title>
     </mat-expansion-panel-header>
     <p *ngIf="isLoadingLitumConfig$ | async">Loading...</p>
     <ats-litum-config-edit
-      *ngIf="!(isLoadingLitumConfig$ | async)"
+      *ngIf="(isLoadingLitumConfig$ | async) === false"
       [config]="litumConfig$ | async"
       (save)="onLitumSave($event)"
     ></ats-litum-config-edit>

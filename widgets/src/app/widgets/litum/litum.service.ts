@@ -1,11 +1,5 @@
-import { Injectable } from "@angular/core";
-import {
-  AlarmService,
-  AttributeService,
-  DeviceService,
-  EntityRelationService,
-  EntityService,
-} from "@core/public-api";
+import { Injectable } from '@angular/core';
+import { AlarmService, AttributeService, DeviceService, EntityRelationService, EntityService } from '@core/public-api';
 import {
   AliasFilterType,
   BooleanOperation,
@@ -20,43 +14,34 @@ import {
   NumericOperation,
   PageData,
   StringOperation,
-} from "@shared/public-api";
-import { firstValueFrom, forkJoin, from, Observable, of } from "rxjs";
-import * as op from "rxjs/operators";
-import { BasicGatewayService } from "../shared/basic-gateway-service";
-import {
-  BusinessRule,
-  BusinessRuleMap,
-  GatewayConfig,
-  LitumConfig,
-  Person,
-  Tag,
-  TagData,
-  Zone,
-} from "./models";
+} from '@shared/public-api';
+import { firstValueFrom, forkJoin, from, Observable, of } from 'rxjs';
+import * as op from 'rxjs/operators';
+import { BasicGatewayService } from '../shared/basic-gateway-service';
+import { BusinessRule, GatewayConfig, LitumConfig, Person, Tag, TagData, Zone, AlarmConfig } from './models';
 
-const GET_GATEWAY_CONFIG_RPC = "get_web_config";
-const SET_GATEWAY_CONFIG_RPC = "set_web_config";
+const GET_GATEWAY_CONFIG_RPC = 'get_web_config';
+const SET_GATEWAY_CONFIG_RPC = 'set_web_config';
 
-const GET_LITUM_CONFIG_RPC = "get_login_config";
-const SET_LITUM_CONFIG_RPC = "set_login_config";
+const GET_LITUM_CONFIG_RPC = 'get_login_config';
+const SET_LITUM_CONFIG_RPC = 'set_login_config';
 
-const GET_ALARM_CONFIG_RPC = "get_alarm_config";
-const SET_ALARM_CONFIG_RPC = "set_alarm_config";
+const GET_ALARM_CONFIG_RPC = 'get_alarm_config';
+const SET_ALARM_CONFIG_RPC = 'set_alarm_config';
 
-const GET_BUSINESS_RULES_RPC = "get_business_rules";
+const GET_BUSINESS_RULES_RPC = 'get_business_rules';
 
-const IS_TAG = "isTag";
-const IS_ZONE = "isZone";
-const IS_PERSON = "isHuman";
-const PERSON_ID = "litumEntityId";
-const TAG_ID = "litumTagId";
-const ZONE_ID = "litumZoneId";
-const PERSON_NAME = "litumEntityName";
-const PRIMARY_CODE = "litumPrimaryCode";
-const ZONE_NAME = "litumZoneName";
-const OWNER_RELATION = "Owner";
-const POSITION_RELATION = "Position";
+const IS_TAG = 'isTag';
+const IS_ZONE = 'isZone';
+const IS_PERSON = 'isHuman';
+const PERSON_ID = 'litumEntityId';
+const TAG_ID = 'litumTagId';
+const ZONE_ID = 'litumZoneId';
+const PERSON_NAME = 'litumEntityName';
+const PRIMARY_CODE = 'litumPrimaryCode';
+const ZONE_NAME = 'litumZoneName';
+const OWNER_RELATION = 'Owner';
+const POSITION_RELATION = 'Position';
 
 @Injectable()
 export class LitumService extends BasicGatewayService {
@@ -71,54 +56,27 @@ export class LitumService extends BasicGatewayService {
   }
 
   getLitumConfig(gatewayId: string): Observable<LitumConfig> {
-    return this.getConfigValueByRpc<LitumConfig>(
-      gatewayId,
-      GET_LITUM_CONFIG_RPC
-    );
+    return this.getConfigValueByRpc<LitumConfig>(gatewayId, GET_LITUM_CONFIG_RPC);
   }
 
   getGatewayConfig(gatewayId: string): Observable<GatewayConfig> {
-    return this.getConfigValueByRpc<GatewayConfig>(
-      gatewayId,
-      GET_GATEWAY_CONFIG_RPC
-    );
+    return this.getConfigValueByRpc<GatewayConfig>(gatewayId, GET_GATEWAY_CONFIG_RPC);
   }
 
-  getBusinessRuleMap(gatewayId: string): Observable<BusinessRuleMap> {
-    return this.getConfigValueByRpc<BusinessRuleMap>(
-      gatewayId,
-      GET_ALARM_CONFIG_RPC
-    );
+  getAlarmConfig(gatewayId: string): Observable<AlarmConfig[]> {
+    return this.getConfigValueByRpc<AlarmConfig[]>(gatewayId, GET_ALARM_CONFIG_RPC);
   }
 
-  setBusinessRuleMap(
-    gatewayId: string,
-    businessRuleMap: BusinessRuleMap
-  ): Observable<string> {
-    return this.setConfigValueByRpc(
-      gatewayId,
-      SET_ALARM_CONFIG_RPC,
-      businessRuleMap
-    );
+  setAlarmConfig(gatewayId: string, alarmConfig: AlarmConfig[]): Observable<string> {
+    return this.setConfigValueByRpc(gatewayId, SET_ALARM_CONFIG_RPC, alarmConfig);
   }
 
   setLitumConfig(gatewayId: string, litumConfig: LitumConfig): Observable<any> {
-    return this.setConfigValueByRpc(
-      gatewayId,
-      SET_LITUM_CONFIG_RPC,
-      litumConfig
-    );
+    return this.setConfigValueByRpc(gatewayId, SET_LITUM_CONFIG_RPC, litumConfig);
   }
 
-  setGatewayConfig(
-    gatewayId: string,
-    gatewayConfig: GatewayConfig
-  ): Observable<any> {
-    return this.setConfigValueByRpc(
-      gatewayId,
-      SET_GATEWAY_CONFIG_RPC,
-      gatewayConfig
-    );
+  setGatewayConfig(gatewayId: string, gatewayConfig: GatewayConfig): Observable<any> {
+    return this.setConfigValueByRpc(gatewayId, SET_GATEWAY_CONFIG_RPC, gatewayConfig);
   }
 
   getBusinessRules(gatewayId: string): Observable<BusinessRule[]> {
@@ -129,7 +87,9 @@ export class LitumService extends BasicGatewayService {
       })
       .pipe(
         op.map((rpcResponse) => {
-          if (rpcResponse.error.length > 0) throw new Error(rpcResponse.error);
+          if (rpcResponse.error.length > 0) {
+            throw new Error(rpcResponse.error);
+          }
           return rpcResponse.rules;
         })
       );
@@ -150,7 +110,7 @@ export class LitumService extends BasicGatewayService {
         entityType: EntityType.ASSET,
         // resolveMultiple: true,
       },
-      entityFields: [{ type: EntityKeyType.ENTITY_FIELD, key: "name" }],
+      entityFields: [{ type: EntityKeyType.ENTITY_FIELD, key: 'name' }],
       latestValues: [
         { type: EntityKeyType.ATTRIBUTE, key: PERSON_ID },
         { type: EntityKeyType.ATTRIBUTE, key: PERSON_NAME },
@@ -171,7 +131,7 @@ export class LitumService extends BasicGatewayService {
           predicate: {
             type: FilterPredicateType.STRING,
             operation: StringOperation.NOT_EQUAL,
-            value: { defaultValue: "" },
+            value: { defaultValue: '' },
             ignoreCase: false,
           },
         },
@@ -188,16 +148,14 @@ export class LitumService extends BasicGatewayService {
       pageLink: { page, pageSize },
     };
     return this.entityService.findEntityDataByQuery(query).pipe(
-      op.map((pageData: PageData<EntityData>) => {
-        return {
-          ...pageData,
-          data: pageData.data.map((item: EntityData) => ({
-            deviceId: item.entityId.id,
-            id: parseInt(item.latest["ATTRIBUTE"][PERSON_ID]["value"]),
-            name: item.latest["ATTRIBUTE"][PERSON_NAME]["value"],
-          })),
-        };
-      })
+      op.map((pageData: PageData<EntityData>) => ({
+        ...pageData,
+        data: pageData.data.map((item: EntityData) => ({
+          deviceId: item.entityId.id,
+          id: parseInt(item.latest.ATTRIBUTE[PERSON_ID].value, 10),
+          name: item.latest.ATTRIBUTE[PERSON_NAME].value,
+        })),
+      }))
     );
   }
 
@@ -209,7 +167,7 @@ export class LitumService extends BasicGatewayService {
         entityType: EntityType.DEVICE,
         // resolveMultiple: true,
       },
-      entityFields: [{ type: EntityKeyType.ENTITY_FIELD, key: "name" }],
+      entityFields: [{ type: EntityKeyType.ENTITY_FIELD, key: 'name' }],
       latestValues: [
         { type: EntityKeyType.ATTRIBUTE, key: TAG_ID },
         { type: EntityKeyType.ATTRIBUTE, key: PRIMARY_CODE },
@@ -237,18 +195,14 @@ export class LitumService extends BasicGatewayService {
       pageLink: { page, pageSize },
     };
     return this.entityService.findEntityDataByQuery(query).pipe(
-      op.map((pageData: PageData<EntityData>) => {
-        return {
-          ...pageData,
-          data: pageData.data.map((item: EntityData) => ({
-            deviceId: item.entityId.id,
-            id: parseInt(item.latest["ATTRIBUTE"][TAG_ID]["value"]),
-            primaryCode: parseInt(
-              item.latest["ATTRIBUTE"][PRIMARY_CODE]["value"]
-            ),
-          })),
-        };
-      })
+      op.map((pageData: PageData<EntityData>) => ({
+        ...pageData,
+        data: pageData.data.map((item: EntityData) => ({
+          deviceId: item.entityId.id,
+          id: parseInt(item.latest.ATTRIBUTE[TAG_ID].value, 10),
+          primaryCode: parseInt(item.latest.ATTRIBUTE[PRIMARY_CODE].value, 10),
+        })),
+      }))
     );
   }
 
@@ -260,7 +214,7 @@ export class LitumService extends BasicGatewayService {
         entityType: EntityType.ASSET,
         // resolveMultiple: true,
       },
-      entityFields: [{ type: EntityKeyType.ENTITY_FIELD, key: "name" }],
+      entityFields: [{ type: EntityKeyType.ENTITY_FIELD, key: 'name' }],
       latestValues: [
         { type: EntityKeyType.ATTRIBUTE, key: ZONE_ID },
         { type: EntityKeyType.ATTRIBUTE, key: ZONE_NAME },
@@ -288,16 +242,14 @@ export class LitumService extends BasicGatewayService {
       pageLink: { page, pageSize },
     };
     return this.entityService.findEntityDataByQuery(query).pipe(
-      op.map((pageData: PageData<EntityData>) => {
-        return {
-          ...pageData,
-          data: pageData.data.map((item: EntityData) => ({
-            deviceId: item.entityId.id,
-            id: parseInt(item.latest["ATTRIBUTE"][ZONE_ID]["value"]),
-            name: item.latest["ATTRIBUTE"][ZONE_NAME]["value"],
-          })),
-        };
-      })
+      op.map((pageData: PageData<EntityData>) => ({
+        ...pageData,
+        data: pageData.data.map((item: EntityData) => ({
+          deviceId: item.entityId.id,
+          id: parseInt(item.latest.ATTRIBUTE[ZONE_ID].value, 10),
+          name: item.latest.ATTRIBUTE[ZONE_NAME].value,
+        })),
+      }))
     );
   }
 
@@ -305,7 +257,7 @@ export class LitumService extends BasicGatewayService {
     const personMap = new Map<string, Person>();
     let currentPage = 0;
     while (true) {
-      const pageData = await firstValueFrom(
+      const personPageData = await firstValueFrom(
         this.getPersons(currentPage).pipe(
           op.tap((pageData) => {
             pageData.data.forEach((person) => {
@@ -315,7 +267,9 @@ export class LitumService extends BasicGatewayService {
           })
         )
       );
-      if (!pageData.hasNext) break;
+      if (!personPageData.hasNext) {
+        break;
+      }
     }
     return personMap;
   }
@@ -324,7 +278,7 @@ export class LitumService extends BasicGatewayService {
     const zoneMap = new Map<string, Zone>();
     let currentPage = 0;
     while (true) {
-      const pageData = await firstValueFrom(
+      const zonePageData = await firstValueFrom(
         this.getZones(currentPage).pipe(
           op.tap((pageData) => {
             pageData.data.forEach((zone) => {
@@ -334,7 +288,9 @@ export class LitumService extends BasicGatewayService {
           })
         )
       );
-      if (!pageData.hasNext) break;
+      if (!zonePageData.hasNext) {
+        break;
+      }
     }
     return zoneMap;
   }
@@ -343,7 +299,7 @@ export class LitumService extends BasicGatewayService {
     let currentPage = 0;
     const tagMap = new Map<string, Tag>();
     while (true) {
-      const pageData = await firstValueFrom(
+      const tagPageData = await firstValueFrom(
         this.getTags(currentPage).pipe(
           op.tap((pageData) => {
             pageData.data.forEach((tag) => {
@@ -353,7 +309,9 @@ export class LitumService extends BasicGatewayService {
           })
         )
       );
-      if (!pageData.hasNext) break;
+      if (!tagPageData.hasNext) {
+        break;
+      }
     }
     return tagMap;
   }
@@ -362,21 +320,15 @@ export class LitumService extends BasicGatewayService {
     let personMap: Map<string, Person>;
     let tagMap: Map<string, Tag>;
     let zoneMap: Map<string, Zone>;
-    return forkJoin([
-      from(this.getAllPersons()),
-      from(this.getAllTags()),
-      from(this.getAllZones()),
-    ]).pipe(
+    return forkJoin([from(this.getAllPersons()), from(this.getAllTags()), from(this.getAllZones())]).pipe(
       op.tap(([people, tags, zones]) => {
-        console.log(
-          `getTagData() got ${people.size} people, ${tags.size} tags and ${zones.size} zones`
-        );
+        console.log(`getTagData() got ${people.size} people, ${tags.size} tags and ${zones.size} zones`);
         personMap = people;
         tagMap = tags;
         zoneMap = zones;
       }),
-      op.switchMap(() => {
-        return of(...tagMap.values()).pipe(
+      op.switchMap(() =>
+        of(...tagMap.values()).pipe(
           op.mergeMap(
             (tag) =>
               this.relationService.findByQuery({
@@ -399,39 +351,36 @@ export class LitumService extends BasicGatewayService {
               }),
             5
           )
-        );
-      }),
-      op.filter((tagRelations: EntityRelation[]) => tagRelations.length == 2),
+        )
+      ),
+      op.filter((tagRelations: EntityRelation[]) => tagRelations.length === 2),
       op.map((tagRelations: EntityRelation[]): TagData => {
-        let personAssetId = "";
+        let personAssetId = '';
         let personId = 0;
-        let personName = "[Unknown]";
-        let zoneAssetId = "";
+        let personName = '[Unknown]';
+        let zoneAssetId = '';
         let zoneId = 0;
-        let zoneName = "[Unknown]";
+        let zoneName = '[Unknown]';
         tagRelations.forEach((relation: EntityRelation) => {
-          if (relation.type == OWNER_RELATION) {
+          if (relation.type === OWNER_RELATION) {
             const person = personMap.get(relation.from.id);
-            console.log("getTagData() person is", person);
+            console.log('getTagData() person is', person);
             personAssetId = person.deviceId;
             personId = person.id;
             personName = person.name;
-          } else if (relation.type == POSITION_RELATION) {
+          } else if (relation.type === POSITION_RELATION) {
             const zone = zoneMap.get(relation.from.id);
-            console.log("getTagData() zone is", zone);
+            console.log('getTagData() zone is', zone);
             zoneAssetId = zone.deviceId;
             zoneId = zone.id;
             zoneName = zone.name;
           } else {
-            console.warn("Unexpected relation type " + relation.type);
+            console.warn('Unexpected relation type ' + relation.type);
           }
         });
-        const tag =
-          tagRelations.length > 0
-            ? tagMap.get(tagRelations[0].to.id)
-            : undefined;
+        const tag = tagRelations.length > 0 ? tagMap.get(tagRelations[0].to.id) : undefined;
         // if (tag == undefined) console.warn("tag not found", tagRelations)
-        console.log("getTagData() tag is", tag);
+        console.log('getTagData() tag is', tag);
         return {
           tagDeviceId: tag?.deviceId,
           tagId: tag?.id,
