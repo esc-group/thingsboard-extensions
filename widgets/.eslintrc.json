@@ -33,7 +33,7 @@
         "@angular-eslint/component-selector": [
           "error",
           {
-            "prefix": [ "tb" ]
+            "prefix": [ "ats" ]
           }
         ],
         "id-blacklist": [

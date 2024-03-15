@@ -20,7 +20,7 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "tb",
+            "prefix": "ats",
             "style": "camelCase"
           }
         ],
@@ -28,7 +28,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "tb",
+            "prefix": "ats",
             "style": "kebab-case"
           }
         ]

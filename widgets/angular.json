@@ -7,7 +7,7 @@
       "projectType": "library",
       "root": "src",
       "sourceRoot": "src/app",
-      "prefix": "tb",
+      "prefix": "ats",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
