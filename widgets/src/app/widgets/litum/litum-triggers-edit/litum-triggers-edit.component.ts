@@ -59,6 +59,7 @@ export class LitumTriggersEditComponent implements OnInit, OnDestroy, OnChanges 
     }));
     console.log('LitumTriggersEditComponent.ngOnChanges() uiAlarmConfigs', uiAlarmConfigs);
     this.savedUiRules = uiAlarmConfigs;
+    this.triggersArray.clear();
     uiAlarmConfigs.forEach(this.addTriggerToForm);
   }
 
@@ -100,7 +101,7 @@ export class LitumTriggersEditComponent implements OnInit, OnDestroy, OnChanges 
           businessRuleId,
           alarmType,
           alarmSeverity,
-        }) as AlarmConfig
+        } as AlarmConfig)
     );
     this.save.next(alarmConfigs);
     this.savedUiRules = this.triggersArray.value;

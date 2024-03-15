@@ -136,12 +136,6 @@ export class BasicGatewayService {
   }
 
   protected setConfigValueByRpc(id: string, method: string, params: any): Observable<string> {
-    return this.deviceService.sendTwoWayRpcCommand(id, { method, params }).pipe(
-      op.first(),
-      op.map((response: BasicRpcResponse) => {
-        if (response.error) throw new Error(response.message);
-        return response.message;
-      })
-    );
+    return this.deviceService.sendOneWayRpcCommand(id, { method, params, persistent: true });
   }
 }

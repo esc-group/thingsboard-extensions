@@ -145,16 +145,17 @@ export class LitumEditComponent extends PageComponent implements OnInit, OnDestr
   };
 
   onTriggersSave = (config: AlarmConfig[]): void => {
-    if (this.isSaving$.value) return;
+    if (this.isSaving$.value) {
+      return;
+    }
     this.isSaving$.next(true);
     const saveSubscription = this.litumService.setAlarmConfig(this.litumId$.value, config).subscribe({
       next: () => {
-        this.ctx.showToast('warn', 'Save success', 3000, 'bottom', 'center', 'dashboardDialog');
         this.triggersConfig$.next(config);
+        this.ctx.dialogs.alert('Save success', '');
       },
       error: (error: Error) => {
-        this.ctx.showToast('error', 'Save failed', 3000, 'bottom', 'center', 'dashboardDialog');
-        const errors = JSON.parse(error.message); // todo match up errors with form widgets and put them on-screen
+        this.ctx.dialogs.errorAlert('Save failed', '', error);
       },
       complete: () => {
         this.isSaving$.next(false);
