@@ -1,13 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import {
-  AbstractControl,
-  FormArray,
-  FormControl,
-  FormGroup,
-} from "@angular/forms";
-import { AlarmSeverity } from "@shared/public-api";
-import { AlarmRule, AlarmRuleConfig, QuantumRoom } from "../models";
-import { EventCodes } from "./event-codes";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AbstractControl, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { AlarmSeverity } from '@shared/public-api';
+import { AlarmRule, AlarmRuleConfig, QuantumRoom } from '../models';
+import { EventCodes } from './event-codes';
 
 interface UiAlarmRule {
   alarmType: string;
@@ -22,16 +17,13 @@ interface UiAlarmRuleConfig {
   fallback: UiAlarmRule | null;
 }
 
-function getRoomName(roomId: number, rooms: QuantumRoom[]): string {
-  const room = rooms.find((room) => room.id === roomId);
+const getRoomName = (roomId: number, rooms: QuantumRoom[]): string => {
+  const room = rooms.find((item) => item.id === roomId);
   return room ? room.name : `? Room ${roomId} ?`;
-}
+};
 
-function getUiAlarmRule(
-  alarmRule: AlarmRule,
-  rooms: QuantumRoom[]
-): UiAlarmRule {
-  return alarmRule
+const getUiAlarmRule = (alarmRule: AlarmRule, rooms: QuantumRoom[]): UiAlarmRule =>
+  alarmRule
     ? {
         alarmType: alarmRule.alarmType,
         alarmSeverity: alarmRule.severity,
@@ -43,10 +35,9 @@ function getUiAlarmRule(
         offEventCode: alarmRule.offEventCode,
       }
     : null;
-}
 
-function getAlarmRule(alarmRule: UiAlarmRule): AlarmRule {
-  return alarmRule
+const getAlarmRule = (alarmRule: UiAlarmRule): AlarmRule =>
+  alarmRule
     ? {
         alarmType: alarmRule.alarmType,
         severity: alarmRule.alarmSeverity,
@@ -55,31 +46,21 @@ function getAlarmRule(alarmRule: UiAlarmRule): AlarmRule {
         offEventCode: alarmRule.offEventCode,
       }
     : null;
-}
 
-function getUiAlarmRuleConfig(
-  config: AlarmRuleConfig,
-  rooms: QuantumRoom[]
-): UiAlarmRuleConfig {
-  return {
-    matching: config.matching.map((alarmRule) =>
-      getUiAlarmRule(alarmRule, rooms)
-    ),
-    fallback: getUiAlarmRule(config.fallback, rooms),
-  };
-}
+const getUiAlarmRuleConfig = (config: AlarmRuleConfig, rooms: QuantumRoom[]): UiAlarmRuleConfig => ({
+  matching: config.matching.map((alarmRule) => getUiAlarmRule(alarmRule, rooms)),
+  fallback: getUiAlarmRule(config.fallback, rooms),
+});
 
-function getAlarmRuleConfig(config: UiAlarmRuleConfig): AlarmRuleConfig {
-  return {
-    matching: config.matching.map((alarmRule) => getAlarmRule(alarmRule)),
-    fallback: getAlarmRule(config.fallback),
-  };
-}
+const getAlarmRuleConfig = (config: UiAlarmRuleConfig): AlarmRuleConfig => ({
+  matching: config.matching.map((alarmRule) => getAlarmRule(alarmRule)),
+  fallback: getAlarmRule(config.fallback),
+});
 
 @Component({
-  selector: "ats-jnl-alarms-edit",
-  templateUrl: "./jnl-alarms-edit.component.html",
-  styleUrls: ["./jnl-alarms-edit.component.scss"],
+  selector: 'ats-jnl-alarms-edit',
+  templateUrl: './jnl-alarms-edit.component.html',
+  styleUrls: ['./jnl-alarms-edit.component.scss'],
 })
 export class JnlAlarmsEditComponent implements OnInit {
   @Input() config: AlarmRuleConfig;
@@ -94,11 +75,11 @@ export class JnlAlarmsEditComponent implements OnInit {
   });
 
   get matching() {
-    return this.form.get("matching") as FormArray;
+    return this.form.get('matching') as FormArray;
   }
 
   getRoomIdArray(control: AbstractControl): FormArray {
-    return control.get("rooms") as FormArray;
+    return control.get('rooms') as FormArray;
   }
 
   get eventCodes() {
@@ -112,9 +93,7 @@ export class JnlAlarmsEditComponent implements OnInit {
       this.matching.push(
         new FormGroup({
           alarmType: new FormControl<string>(alarmRule.alarmType),
-          alarmSeverity: new FormControl<AlarmSeverity>(
-            alarmRule.alarmSeverity
-          ),
+          alarmSeverity: new FormControl<AlarmSeverity>(alarmRule.alarmSeverity),
           rooms: new FormArray(alarmRule.rooms.map(this.buildRoomFormGroup)),
           onEventCode: new FormControl<string>(alarmRule.onEventCode),
           offEventCode: new FormControl<string>(alarmRule.offEventCode),
@@ -147,25 +126,19 @@ export class JnlAlarmsEditComponent implements OnInit {
   }
 
   setOffCode(onCode: string, trigger: AbstractControl): void {
-    const eventCode = EventCodes.find(
-      (eventCode) => eventCode.onCode === onCode
-    );
-    trigger.get("offEventCode").setValue(eventCode.offCode);
+    const eventCode = EventCodes.find((item) => item.onCode === onCode);
+    trigger.get('offEventCode').setValue(eventCode.offCode);
   }
 
   getRooms = (trigger: AbstractControl): QuantumRoom[] | null => {
-    const usedRoomIds: number[] = trigger
-      .get("rooms")
-      .value.map((room: QuantumRoom) => room.id);
-    const rooms = this.rooms.filter(
-      (room) => usedRoomIds.indexOf(room.id) === -1
-    );
+    const usedRoomIds: number[] = trigger.get('rooms').value.map((room: QuantumRoom) => room.id);
+    const rooms = this.rooms.filter((room) => usedRoomIds.indexOf(room.id) === -1);
     return rooms.length === 0 ? null : rooms;
   };
 
   addRoom(roomId: number, trigger: AbstractControl) {
     const selectedRoom = this.rooms.find((room) => room.id === roomId);
-    const roomsArray = trigger.get("rooms") as FormArray;
+    const roomsArray = trigger.get('rooms') as FormArray;
     roomsArray.push(this.buildRoomFormGroup(selectedRoom));
   }
 }

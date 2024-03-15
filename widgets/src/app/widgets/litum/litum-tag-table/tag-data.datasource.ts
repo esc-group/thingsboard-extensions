@@ -1,7 +1,7 @@
-import { MatTableDataSource } from "@angular/material/table";
-import { BehaviorSubject } from "rxjs";
-import { LitumService } from "../litum.service";
-import { TagData } from "../models";
+import { MatTableDataSource } from '@angular/material/table';
+import { BehaviorSubject } from 'rxjs';
+import { LitumService } from '../litum.service';
+import { TagData } from '../models';
 //import * as op from "rxjs/operators"
 
 // https://blog.angular-university.io/angular-material-data-table/
@@ -17,18 +17,18 @@ export class TagDataDataSource extends MatTableDataSource<TagData> {
   }
 
   connect(): BehaviorSubject<TagData[]> {
-    console.log("TagDataDataSource.connect()");
+    console.log('TagDataDataSource.connect()');
     return this.tagDataSubject;
   }
 
   disconnect(): void {
-    console.log("TagDataDataSource.disconnect()");
+    console.log('TagDataDataSource.disconnect()');
     this.tagDataSubject.complete();
     this.isLoadingSubject.complete();
   }
 
   loadTagData() {
-    console.log("TagDataDataSource.loadTagData() started");
+    console.log('TagDataDataSource.loadTagData() started');
     this.isLoadingSubject.next(true);
     const tagDataItems: TagData[] = [];
     const subscription = this.litumService
@@ -49,10 +49,7 @@ export class TagDataDataSource extends MatTableDataSource<TagData> {
           this.tagDataSubject.next(tagDataItems);
           this.isLoadingSubject.next(false);
           subscription.unsubscribe();
-          console.log(
-            `loadTagData() completed ${tagDataItems.length} items`,
-            tagDataItems
-          );
+          console.log(`loadTagData() completed ${tagDataItems.length} items`, tagDataItems);
         },
       });
   }

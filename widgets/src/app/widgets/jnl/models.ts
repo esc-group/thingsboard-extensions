@@ -1,4 +1,4 @@
-import { AlarmSeverity } from "@shared/public-api";
+import { AlarmSeverity } from '@shared/public-api';
 
 export interface QuantumConfig {
   ipAddress: string;

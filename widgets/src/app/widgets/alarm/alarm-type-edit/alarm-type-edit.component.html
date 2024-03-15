@@ -4,12 +4,7 @@
       <mat-label>Add User Alarm Type</mat-label>
       <input matInput #alarmTypeInput />
     </mat-form-field>
-    <button
-      mat-icon-button
-      type="submit"
-      color="primary"
-      (click)="addAlarmType()"
-    >
+    <button mat-icon-button type="submit" color="primary" (click)="addAlarmType()">
       <mat-icon>add</mat-icon>
     </button>
   </form>
@@ -20,12 +15,7 @@
     <mat-list-item *ngFor="let alarmType of alarmTypes">
       <mat-icon matListItemIcon>circle_notifications</mat-icon>
       {{ alarmType }}
-      <button
-        matListItemMeta
-        mat-icon-button
-        type="button"
-        (click)="delAlarmType(alarmType)"
-      >
+      <button matListItemMeta mat-icon-button type="button" (click)="delAlarmType(alarmType)">
         <mat-icon>delete</mat-icon>
       </button>
     </mat-list-item>

@@ -18,21 +18,11 @@
     </mat-form-field>
     <mat-form-field fxFlex="20" *ngIf="form.get('heartbeatSeconds').value > 0">
       <mat-label>Number</mat-label>
-      <input
-        matInput
-        type="text"
-        formControlName="heartbeatNumber"
-        placeholder="0"
-      />
+      <input matInput type="text" formControlName="heartbeatNumber" placeholder="0" />
     </mat-form-field>
     <mat-form-field fxFlex="50" *ngIf="form.get('heartbeatSeconds').value > 0">
       <mat-label>Message</mat-label>
-      <input
-        matInput
-        type="text"
-        formControlName="heartbeatMessage"
-        placeholder="HEARTBEAT"
-      />
+      <input matInput type="text" formControlName="heartbeatMessage" placeholder="HEARTBEAT" />
     </mat-form-field>
   </div>
   <div fxLayout="row" fxLayoutGap="1rem">

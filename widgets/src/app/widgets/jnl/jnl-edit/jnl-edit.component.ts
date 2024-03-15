@@ -1,16 +1,16 @@
-import { Component, OnInit } from "@angular/core";
-import { AppState } from "@core/core.state";
-import { Store } from "@ngrx/store";
-import { PageComponent } from "@shared/public-api";
-import { BehaviorSubject, forkJoin } from "rxjs";
-import * as op from "rxjs/operators";
-import { JnlService } from "../jnl-service";
-import { AlarmRuleConfig, QuantumConfig, QuantumRoom } from "../models";
+import { Component, OnInit } from '@angular/core';
+import { AppState } from '@core/core.state';
+import { Store } from '@ngrx/store';
+import { PageComponent } from '@shared/public-api';
+import { BehaviorSubject, forkJoin } from 'rxjs';
+import * as op from 'rxjs/operators';
+import { JnlService } from '../jnl-service';
+import { AlarmRuleConfig, QuantumConfig, QuantumRoom } from '../models';
 
 @Component({
-  selector: "ats-jnl-edit",
-  templateUrl: "./jnl-edit.component.html",
-  styleUrls: ["./jnl-edit.component.scss"],
+  selector: 'ats-jnl-edit',
+  templateUrl: './jnl-edit.component.html',
+  styleUrls: ['./jnl-edit.component.scss'],
 })
 export class JnlEditComponent extends PageComponent implements OnInit {
   gatewayId$ = new BehaviorSubject<string>(null);
@@ -28,7 +28,7 @@ export class JnlEditComponent extends PageComponent implements OnInit {
 
   ngOnInit(): void {
     const sub = this.jnlService
-      .getGatewayId("JNL Gateway")
+      .getGatewayId('JNL Gateway')
       .pipe(
         op.tap((gatewayId) => {
           this.gatewayId$.next(gatewayId);
@@ -66,22 +66,18 @@ export class JnlEditComponent extends PageComponent implements OnInit {
   }
 
   onAlarmsSave = (config: AlarmRuleConfig): void => {
-    const sub = this.jnlService
-      .setAlarmRuleConfig(this.gatewayId$.value, config)
-      .subscribe({
-        complete: () => {
-          sub.unsubscribe();
-        },
-      });
+    const sub = this.jnlService.setAlarmRuleConfig(this.gatewayId$.value, config).subscribe({
+      complete: () => {
+        sub.unsubscribe();
+      },
+    });
   };
 
   onQuantumSave = (config: QuantumConfig): void => {
-    const sub = this.jnlService
-      .setQuantumConfig(this.gatewayId$.value, config)
-      .subscribe({
-        complete: () => {
-          sub.unsubscribe();
-        },
-      });
+    const sub = this.jnlService.setQuantumConfig(this.gatewayId$.value, config).subscribe({
+      complete: () => {
+        sub.unsubscribe();
+      },
+    });
   };
 }

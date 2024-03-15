@@ -1,19 +1,8 @@
-<div
-  fxLayout="row"
-  fxFill
-  fxLayoutGap="1rem"
-  fxLayoutAlign="space-between center"
->
+<div fxLayout="row" fxFill fxLayoutGap="1rem" fxLayoutAlign="space-between center">
   <div #title class="title-text" [class.inactive]="inactive$ | async">
     {{ title$ | async }}
   </div>
-  <button
-    mat-mini-fab
-    color="accent"
-    class="no-box-shadow"
-    (click)="openDialog()"
-    [disabled]="this.component === null"
-  >
+  <button mat-mini-fab color="accent" class="no-box-shadow" (click)="openDialog()" [disabled]="this.component === null">
     <mat-icon>edit</mat-icon>
   </button>
 </div>

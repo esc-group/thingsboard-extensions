@@ -1,44 +1,26 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from "@angular/core";
-import {
-  SubEntity,
-  UiEscalationGroup,
-  UiEscalationLevel,
-} from "../../store/state";
-import { MatSelectionListChange } from "@angular/material/list";
-import { FormControl, Validators } from "@angular/forms";
-import * as op from "rxjs/operators";
-import * as EscalationActions from "../../store/actions";
-import { Store } from "@ngrx/store";
-import { AppState } from "@core/core.state";
-import { Subscription } from "rxjs";
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { SubEntity, UiEscalationGroup, UiEscalationLevel } from '../../store/state';
+import { MatSelectionListChange } from '@angular/material/list';
+import { FormControl, Validators } from '@angular/forms';
+import * as op from 'rxjs/operators';
+import * as EscalationActions from '../../store/actions';
+import { Store } from '@ngrx/store';
+import { AppState } from '@core/core.state';
+import { Subscription } from 'rxjs';
 
 @Component({
-  selector: "ats-escalation-group-edit",
-  templateUrl: "./escalation-group-edit.component.html",
-  styleUrls: ["./escalation-group-edit.component.scss"],
+  selector: 'ats-escalation-group-edit',
+  templateUrl: './escalation-group-edit.component.html',
+  styleUrls: ['./escalation-group-edit.component.scss'],
 })
-export class EscalationGroupEditComponent
-  implements OnChanges, OnInit, OnDestroy
-{
+export class EscalationGroupEditComponent implements OnChanges, OnInit, OnDestroy {
   @Input() usedByLevels: UiEscalationLevel[];
   @Input() group?: UiEscalationGroup;
   @Input() devices: SubEntity[];
 
   protected subscriptions: Subscription[] = [];
 
-  fcName = new FormControl(this.group?.name, [
-    Validators.required,
-    Validators.minLength(1),
-  ]);
+  fcName = new FormControl(this.group?.name, [Validators.required, Validators.minLength(1)]);
 
   @Output() nameChanged = this.fcName.valueChanges.pipe(
     op.debounceTime(750),
@@ -51,11 +33,10 @@ export class EscalationGroupEditComponent
   constructor(protected store: Store<AppState>) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log("EGE ngOnChanges", changes);
-    if (changes.hasOwnProperty("group")) {
+    console.log('EGE ngOnChanges', changes);
+    if (changes.hasOwnProperty('group')) {
       // prevents endless loop
-      if (this.fcName.value !== changes.group.currentValue.name)
-        this.fcName.setValue(changes.group.currentValue.name);
+      if (this.fcName.value !== changes.group.currentValue.name) this.fcName.setValue(changes.group.currentValue.name);
     }
   }
 
@@ -72,11 +53,7 @@ export class EscalationGroupEditComponent
   }
 
   ngOnInit(): void {
-    this.subscriptions.push(
-      this.fcName.valueChanges
-        .pipe(op.debounceTime(750))
-        .subscribe(this.setGroupName)
-    );
+    this.subscriptions.push(this.fcName.valueChanges.pipe(op.debounceTime(750)).subscribe(this.setGroupName));
   }
 
   ngOnDestroy(): void {
@@ -85,7 +62,7 @@ export class EscalationGroupEditComponent
 
   setGroupName = (name: string): void => {
     if (this.fcName.valid) {
-      console.log("group name is now " + name);
+      console.log('group name is now ' + name);
       this.store.dispatch(EscalationActions.setGroupName({ name }));
     }
   };

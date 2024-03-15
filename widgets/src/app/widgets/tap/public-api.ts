@@ -1,2 +1,2 @@
-export * from "./tap-edit/tap-edit.component";
-export * from "./tap.module";
+export * from './tap-edit/tap-edit.component';
+export * from './tap.module';

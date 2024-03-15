@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { QuantumConfig } from "../models";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { QuantumConfig } from '../models';
 
 @Component({
-  selector: "ats-jnl-quantum-edit",
-  templateUrl: "./jnl-quantum-edit.component.html",
-  styleUrls: ["./jnl-quantum-edit.component.scss"],
+  selector: 'ats-jnl-quantum-edit',
+  templateUrl: './jnl-quantum-edit.component.html',
+  styleUrls: ['./jnl-quantum-edit.component.scss'],
 })
 export class JnlQuantumEditComponent implements OnInit {
   @Input() config: QuantumConfig;
@@ -14,34 +14,24 @@ export class JnlQuantumEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.form.addControl(
-      "ipAddress",
-      new FormControl<string>(this.config.ipAddress, [
-        Validators.required,
-        Validators.pattern(/.+/),
-      ])
+      'ipAddress',
+      new FormControl<string>(this.config.ipAddress, [Validators.required, Validators.pattern(/.+/)])
     );
     this.form.addControl(
-      "username",
-      new FormControl<string>(this.config.username, [
-        Validators.required,
-        Validators.minLength(1),
-      ])
+      'username',
+      new FormControl<string>(this.config.username, [Validators.required, Validators.minLength(1)])
     );
     this.form.addControl(
-      "password",
-      new FormControl<string>(this.config.username, [
-        Validators.required,
-        Validators.minLength(1),
-      ])
+      'password',
+      new FormControl<string>(this.config.username, [Validators.required, Validators.minLength(1)])
     );
-    this.form.addControl(
-      "useRoom",
-      new FormControl<boolean>(this.config.useRoom, [Validators.required])
-    );
+    this.form.addControl('useRoom', new FormControl<boolean>(this.config.useRoom, [Validators.required]));
   }
 
   onSubmit() {
-    if (this.form.valid) this.save.next(this.form.value as QuantumConfig);
+    if (this.form.valid) {
+      this.save.next(this.form.value as QuantumConfig);
+    }
   }
 
   onReset() {

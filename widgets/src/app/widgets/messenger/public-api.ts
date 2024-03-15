@@ -1,2 +1,2 @@
-export * from "./components/public-api";
-export * from "./messenger.module";
+export * from './components/public-api';
+export * from './messenger.module';

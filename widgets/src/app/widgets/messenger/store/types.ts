@@ -1,4 +1,4 @@
-import { EscalationConfig } from "../models/escalation.models";
+import { EscalationConfig } from '../models/escalation.models';
 
 export interface SaveData {
   config: EscalationConfig;

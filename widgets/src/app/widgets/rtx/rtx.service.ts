@@ -1,16 +1,11 @@
-import { Injectable } from "@angular/core";
-import {
-  AlarmService,
-  AttributeService,
-  DeviceService,
-  EntityService,
-} from "@core/public-api";
-import { Observable } from "rxjs";
-import { BasicGatewayService } from "../shared/basic-gateway-service";
-import { RtxConfig } from "./models";
+import { Injectable } from '@angular/core';
+import { AlarmService, AttributeService, DeviceService, EntityService } from '@core/public-api';
+import { Observable } from 'rxjs';
+import { BasicGatewayService } from '../shared/basic-gateway-service';
+import { RtxConfig } from './models';
 
-const GET_RTX_CONFIG = "get_rtx_config";
-const SET_RTX_CONFIG = "set_rtx_config";
+const GET_RTX_CONFIG = 'get_rtx_config';
+const SET_RTX_CONFIG = 'set_rtx_config';
 
 @Injectable()
 export class RtxService extends BasicGatewayService {

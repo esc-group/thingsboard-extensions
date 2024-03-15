@@ -1,14 +1,14 @@
-import { Component, Inject, OnInit } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
-import * as op from "rxjs/operators";
-import { TapGateway, TapPager } from "../models";
-import { AddPagerData } from "../tap-pager-add/tap-pager-add.component";
-import { TapService } from "../tap.service";
+import { Component, Inject, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import * as op from 'rxjs/operators';
+import { TapGateway, TapPager } from '../models';
+import { AddPagerData } from '../tap-pager-add/tap-pager-add.component';
+import { TapService } from '../tap.service';
 
 @Component({
-  selector: "ats-tap-edit",
-  templateUrl: "./tap-edit.component.html",
-  styleUrls: ["./tap-edit.component.scss"],
+  selector: 'ats-tap-edit',
+  templateUrl: './tap-edit.component.html',
+  styleUrls: ['./tap-edit.component.scss'],
 })
 export class TapEditComponent implements OnInit {
   gatewayName: string;
@@ -17,8 +17,8 @@ export class TapEditComponent implements OnInit {
 
   constructor(
     protected tapService: TapService,
-    @Inject("widgetContext") widgetContext: any, // proper type hint here will break the module
-    @Inject("gatewayName") gatewayName: string
+    @Inject('widgetContext') widgetContext: any, // proper type hint here will break the module
+    @Inject('gatewayName') gatewayName: string
   ) {
     this.gatewayName = gatewayName;
   }
@@ -35,7 +35,7 @@ export class TapEditComponent implements OnInit {
       )
       .subscribe({
         next: ({ gateway, pagers }) => {
-          console.log("Successfully got ", gateway, pagers);
+          console.log('Successfully got ', gateway, pagers);
           this.tapGateway$.next(gateway);
           this.tapPagers$.next(pagers);
         },
@@ -55,11 +55,7 @@ export class TapEditComponent implements OnInit {
 
   addPager = (addPager: AddPagerData) => {
     const subscription = this.tapService
-      .addPager(
-        this.tapGateway$.value.deviceId,
-        addPager.pagerName,
-        addPager.pagerNumber
-      )
+      .addPager(this.tapGateway$.value.deviceId, addPager.pagerName, addPager.pagerNumber)
       .subscribe({
         next: (device) => {
           const newPager: TapPager = {
@@ -79,11 +75,7 @@ export class TapEditComponent implements OnInit {
   deletePager = (pager: TapPager) => {
     const subscription = this.tapService.deletePager(pager.deviceId).subscribe({
       next: (device) => {
-        this.tapPagers$.next(
-          this.tapPagers$.value.filter(
-            (pager_) => pager_.deviceId !== pager.deviceId
-          )
-        );
+        this.tapPagers$.next(this.tapPagers$.value.filter((pager_) => pager_.deviceId !== pager.deviceId));
       },
       complete: () => {
         subscription?.unsubscribe();

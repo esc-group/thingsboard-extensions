@@ -1,16 +1,16 @@
-import { Component, OnInit } from "@angular/core";
-import { AppState } from "@core/core.state";
-import { Store } from "@ngrx/store";
-import { PageComponent } from "@shared/public-api";
-import { BehaviorSubject, forkJoin } from "rxjs";
-import * as op from "rxjs/operators";
-import { RtxConfig } from "../models";
-import { RtxService } from "../rtx.service";
+import { Component, OnInit } from '@angular/core';
+import { AppState } from '@core/core.state';
+import { Store } from '@ngrx/store';
+import { PageComponent } from '@shared/public-api';
+import { BehaviorSubject, forkJoin } from 'rxjs';
+import * as op from 'rxjs/operators';
+import { RtxConfig } from '../models';
+import { RtxService } from '../rtx.service';
 
 @Component({
-  selector: "ats-rtx-edit",
-  templateUrl: "./rtx-edit.component.html",
-  styleUrls: ["./rtx-edit.component.scss"],
+  selector: 'ats-rtx-edit',
+  templateUrl: './rtx-edit.component.html',
+  styleUrls: ['./rtx-edit.component.scss'],
 })
 export class RtxEditComponent extends PageComponent implements OnInit {
   gatewayId$ = new BehaviorSubject<string>(null);
@@ -25,7 +25,7 @@ export class RtxEditComponent extends PageComponent implements OnInit {
 
   ngOnInit(): void {
     const sub = this.rtxService
-      .getGatewayId("RTX Gateway")
+      .getGatewayId('RTX Gateway')
       .pipe(
         op.tap((gatewayId) => {
           this.gatewayId$.next(gatewayId);
@@ -48,12 +48,10 @@ export class RtxEditComponent extends PageComponent implements OnInit {
   }
 
   onRtxSave = (config: RtxConfig): void => {
-    const sub = this.rtxService
-      .setRtxConfig(this.gatewayId$.value, config)
-      .subscribe({
-        complete: () => {
-          sub.unsubscribe();
-        },
-      });
+    const sub = this.rtxService.setRtxConfig(this.gatewayId$.value, config).subscribe({
+      complete: () => {
+        sub.unsubscribe();
+      },
+    });
   };
 }

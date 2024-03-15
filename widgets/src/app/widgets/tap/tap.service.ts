@@ -1,12 +1,6 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import {
-  AlarmService,
-  AttributeService,
-  DeviceService,
-  EntityRelationService,
-  EntityService,
-} from "@core/public-api";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { AlarmService, AttributeService, DeviceService, EntityRelationService, EntityService } from '@core/public-api';
 import {
   AliasFilterType,
   AttributeScope,
@@ -19,22 +13,19 @@ import {
   FilterPredicateType,
   RelationTypeGroup,
   StringOperation,
-} from "@shared/public-api";
-import { forkJoin, Observable, of } from "rxjs";
-import * as op from "rxjs/operators";
-import { BasicGatewayService } from "../shared/basic-gateway-service";
-import {
-  CREATED_RELATION_TYPE,
-  MESSENGER_RELATION_TYPE,
-} from "../shared/constants";
+} from '@shared/public-api';
+import { forkJoin, Observable, of } from 'rxjs';
+import * as op from 'rxjs/operators';
+import { BasicGatewayService } from '../shared/basic-gateway-service';
+import { CREATED_RELATION_TYPE, MESSENGER_RELATION_TYPE } from '../shared/constants';
 import {
   IS_TAP_GATEWAY_ATTRIBUTE_NAME,
   IS_TAP_PAGER_ATTRIBUTE_NAME,
   SERVER_CONFIG_ATTRIBUTE_NAME,
   TAP_NUMBER_ATTRIBUTE_NAME,
   TAP_PAGER_DEVICE_TYPE,
-} from "./constants";
-import { TapGateway, TapPager, TapServerConfig } from "./models";
+} from './constants';
+import { TapGateway, TapPager, TapServerConfig } from './models';
 
 @Injectable()
 export class TapService extends BasicGatewayService {
@@ -57,13 +48,11 @@ export class TapService extends BasicGatewayService {
           type: AliasFilterType.entityType,
           entityType: EntityType.DEVICE,
         },
-        entityFields: [{ type: EntityKeyType.ENTITY_FIELD, key: "name" }],
-        latestValues: [
-          { type: EntityKeyType.ATTRIBUTE, key: SERVER_CONFIG_ATTRIBUTE_NAME },
-        ],
+        entityFields: [{ type: EntityKeyType.ENTITY_FIELD, key: 'name' }],
+        latestValues: [{ type: EntityKeyType.ATTRIBUTE, key: SERVER_CONFIG_ATTRIBUTE_NAME }],
         keyFilters: [
           {
-            key: { type: EntityKeyType.ENTITY_FIELD, key: "name" },
+            key: { type: EntityKeyType.ENTITY_FIELD, key: 'name' },
             valueType: EntityKeyValueType.STRING,
             predicate: {
               type: FilterPredicateType.STRING,
@@ -89,19 +78,15 @@ export class TapService extends BasicGatewayService {
       .pipe(
         op.map((pageData) => {
           const entityData = pageData.data[0];
-          const config = JSON.parse(
-            entityData.latest["ATTRIBUTE"][SERVER_CONFIG_ATTRIBUTE_NAME][
-              "value"
-            ]
-          );
+          const config = JSON.parse(entityData.latest['ATTRIBUTE'][SERVER_CONFIG_ATTRIBUTE_NAME]['value']);
           const tapGateway: TapGateway = {
             deviceId: entityData.entityId.id,
             deviceName: gatewayName,
             host: config.host,
             port: config.port,
             heartbeatSeconds: config.heartbeatSeconds ?? 60,
-            heartbeatNumber: config.heartbeatNumber ?? "0",
-            heartbeatMessage: config.heartbeatMessage ?? "HEARTBEAT",
+            heartbeatNumber: config.heartbeatNumber ?? '0',
+            heartbeatMessage: config.heartbeatMessage ?? 'HEARTBEAT',
           };
           return tapGateway;
         })
@@ -141,7 +126,7 @@ export class TapService extends BasicGatewayService {
       })
       .pipe(
         op.tap((relations) => {
-          console.log("pager relations", relations);
+          console.log('pager relations', relations);
         }),
         op.map((relations) =>
           forkJoin(
@@ -152,9 +137,7 @@ export class TapService extends BasicGatewayService {
                     type: AliasFilterType.entityType,
                     entityType: EntityType.DEVICE,
                   },
-                  entityFields: [
-                    { type: EntityKeyType.ENTITY_FIELD, key: "name" },
-                  ],
+                  entityFields: [{ type: EntityKeyType.ENTITY_FIELD, key: 'name' }],
                   latestValues: [
                     {
                       type: EntityKeyType.ATTRIBUTE,
@@ -163,7 +146,7 @@ export class TapService extends BasicGatewayService {
                   ],
                   keyFilters: [
                     {
-                      key: { type: EntityKeyType.ENTITY_FIELD, key: "id" },
+                      key: { type: EntityKeyType.ENTITY_FIELD, key: 'id' },
                       valueType: EntityKeyValueType.STRING,
                       predicate: {
                         type: FilterPredicateType.STRING,
@@ -189,19 +172,15 @@ export class TapService extends BasicGatewayService {
                 })
                 .pipe(
                   op.tap((pageData) => {
-                    console.log("pager pageData", pageData);
+                    console.log('pager pageData', pageData);
                   }),
                   op.filter((pageData) => pageData.data.length === 1),
                   op.map((pageData) => {
                     const entityData = pageData.data[0];
                     const pager: TapPager = {
                       deviceId: relation.to.id,
-                      deviceName:
-                        entityData.latest["ENTITY_FIELD"]["name"]["value"],
-                      pagerNumber:
-                        entityData.latest["ATTRIBUTE"][
-                          TAP_NUMBER_ATTRIBUTE_NAME
-                        ]["value"],
+                      deviceName: entityData.latest['ENTITY_FIELD']['name']['value'],
+                      pagerNumber: entityData.latest['ATTRIBUTE'][TAP_NUMBER_ATTRIBUTE_NAME]['value'],
                       gatewayId: gatewayId,
                     };
                     return pager;
@@ -214,35 +193,25 @@ export class TapService extends BasicGatewayService {
       );
   }
 
-  addPager(
-    gatewayId: string,
-    pagerName: string,
-    pagerNumber: string
-  ): Observable<Device> {
-    return this.deviceService
-      .saveDevice({ name: pagerName, type: TAP_PAGER_DEVICE_TYPE, label: "" })
-      .pipe(
-        op.switchMap((pager: Device) =>
-          forkJoin([
-            of(pager), // we use this value as final result
-            this.attributeService.saveEntityAttributes(
-              pager.id,
-              AttributeScope.SERVER_SCOPE,
-              [
-                { key: TAP_NUMBER_ATTRIBUTE_NAME, value: pagerNumber },
-                { key: IS_TAP_PAGER_ATTRIBUTE_NAME, value: true },
-              ]
-            ),
-            this.entityRelationService.saveRelation({
-              from: { id: gatewayId, entityType: EntityType.DEVICE },
-              to: pager.id,
-              type: MESSENGER_RELATION_TYPE,
-              typeGroup: RelationTypeGroup.COMMON,
-            }),
-          ])
-        ),
-        op.map(([device]) => device)
-      );
+  addPager(gatewayId: string, pagerName: string, pagerNumber: string): Observable<Device> {
+    return this.deviceService.saveDevice({ name: pagerName, type: TAP_PAGER_DEVICE_TYPE, label: '' }).pipe(
+      op.switchMap((pager: Device) =>
+        forkJoin([
+          of(pager), // we use this value as final result
+          this.attributeService.saveEntityAttributes(pager.id, AttributeScope.SERVER_SCOPE, [
+            { key: TAP_NUMBER_ATTRIBUTE_NAME, value: pagerNumber },
+            { key: IS_TAP_PAGER_ATTRIBUTE_NAME, value: true },
+          ]),
+          this.entityRelationService.saveRelation({
+            from: { id: gatewayId, entityType: EntityType.DEVICE },
+            to: pager.id,
+            type: MESSENGER_RELATION_TYPE,
+            typeGroup: RelationTypeGroup.COMMON,
+          }),
+        ])
+      ),
+      op.map(([device]) => device)
+    );
   }
 
   deletePager(pagerDeviceId: string): Observable<any> {

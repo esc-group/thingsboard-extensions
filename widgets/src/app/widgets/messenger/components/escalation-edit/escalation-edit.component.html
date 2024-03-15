@@ -10,37 +10,23 @@
       <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="start">
         <mat-form-field appearance="fill" fxFlex="80%">
           <mat-label>Escalation Level</mat-label>
-          <input
-            *ngIf="(levels$ | async).length == 0"
-            matInput
-            readonly
-            value="No levels added yet."
-          />
+          <input *ngIf="(levels$ | async).length == 0" matInput readonly value="No levels added yet." />
           <mat-select
             *ngIf="(levels$ | async).length > 0"
             [ngModel]="selectedLevel$ | async"
             (ngModelChange)="setSelectedLevel($event)"
           >
-            <mat-option *ngFor="let level of levels$ | async" [value]="level"
-              >{{ level.name }}
-            </mat-option>
+            <mat-option *ngFor="let level of levels$ | async" [value]="level">{{ level.name }} </mat-option>
           </mat-select>
         </mat-form-field>
         <button mat-icon-button (click)="addEscalationLevel()">
           <mat-icon>add</mat-icon>
         </button>
-        <button
-          mat-icon-button
-          color="warn"
-          [disabled]="disableLevelRemoval$ | async"
-          (click)="removeSelectedLevel()"
-        >
+        <button mat-icon-button color="warn" [disabled]="disableLevelRemoval$ | async" (click)="removeSelectedLevel()">
           <mat-icon>delete</mat-icon>
         </button>
       </div>
-      <ats-escalation-level-edit
-        (status)="levelStatusChanged($event)"
-      ></ats-escalation-level-edit>
+      <ats-escalation-level-edit (status)="levelStatusChanged($event)"></ats-escalation-level-edit>
     </mat-expansion-panel>
     <mat-expansion-panel expanded>
       <mat-expansion-panel-header>
@@ -49,20 +35,13 @@
       <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="start">
         <mat-form-field appearance="fill" fxFlex="80%">
           <mat-label>Escalation Group</mat-label>
-          <input
-            *ngIf="(groups$ | async).length === 0"
-            matInput
-            readonly
-            value="No groups added yet."
-          />
+          <input *ngIf="(groups$ | async).length === 0" matInput readonly value="No groups added yet." />
           <mat-select
             *ngIf="(groups$ | async).length > 0"
             [ngModel]="selectedGroup$ | async"
             (ngModelChange)="setSelectedGroup($event)"
           >
-            <mat-option *ngFor="let group of groups$ | async" [value]="group"
-              >{{ group.name }}
-            </mat-option>
+            <mat-option *ngFor="let group of groups$ | async" [value]="group">{{ group.name }} </mat-option>
           </mat-select>
         </mat-form-field>
         <button mat-icon-button (click)="addEscalationGroup()">
@@ -91,10 +70,7 @@
       <mat-expansion-panel-header>
         <mat-panel-title>Alarm Type Management</mat-panel-title>
       </mat-expansion-panel-header>
-      <ats-alarm-type-edit
-        #userAlarmTypes
-        (change)="userAlarmTypesChanged()"
-      ></ats-alarm-type-edit>
+      <ats-alarm-type-edit #userAlarmTypes (alarmTypesChange)="userAlarmTypesChanged()"></ats-alarm-type-edit>
     </mat-expansion-panel>
     <div style="margin-top: 1rem">
       <button

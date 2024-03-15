@@ -1,13 +1,8 @@
 <mat-accordion>
   <mat-expansion-panel *ngIf="rtxConfig$ | async as rtxConfig" expanded>
     <mat-expansion-panel-header>
-      <mat-panel-title
-        >RTX Configuration / Text Messaging & Alarm Server
-      </mat-panel-title>
+      <mat-panel-title>RTX Configuration / Text Messaging & Alarm Server </mat-panel-title>
     </mat-expansion-panel-header>
-    <ats-rtx-rtx-edit
-      [config]="rtxConfig"
-      (save)="onRtxSave($event)"
-    ></ats-rtx-rtx-edit>
+    <ats-rtx-rtx-edit [config]="rtxConfig" (save)="onRtxSave($event)"></ats-rtx-rtx-edit>
   </mat-expansion-panel>
 </mat-accordion>

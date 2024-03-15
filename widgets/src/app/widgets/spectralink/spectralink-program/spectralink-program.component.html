@@ -23,37 +23,31 @@
       </mat-form-field>
       <mat-form-field>
         <mat-label>Current Handset Username</mat-label>
-        <input
-          matInput
-          formControlName="username"
-          type="text"
-          placeholder="Admin"
-        />
+        <input matInput formControlName="username" type="text" placeholder="Admin" />
       </mat-form-field>
       <mat-form-field>
         <mat-label>Current Handset Password</mat-label>
-        <input
-          matInput
-          formControlName="password"
-          type="password"
-          placeholder="456"
-        />
+        <input matInput formControlName="password" type="password" placeholder="456" />
       </mat-form-field>
       <p style="font-size: small">
         The <i>username</i> and <i>password</i> values in the below <b>Handset Login Configuration</b> panel will be
         used for both <b>Phone State Polling</b> and <b>Push</b> operations.
       </p>
       <p style="font-size: small; color: darkred">
-        WARNING: The following sections will be completely replaced during programming:
-        Configure URLs, Telephony Event Notifications, Phone State Polling, Push.
+        WARNING: The following sections will be completely replaced during programming: Configure URLs, Telephony Event
+        Notifications, Phone State Polling, Push.
       </p>
     </div>
     <div fxLayout="row" fxLayoutGap="1rem">
-      <button mat-raised-button type="submit" color="primary" [disabled]="programDisabled$ | async">
-        Program
-      </button>
-      <button mat-button type="button" *ngIf="resultShow$ | async"
-              [color]="resultColor$ | async" (click)="hideResult()">{{ resultMessage$ | async }}
+      <button mat-raised-button type="submit" color="primary" [disabled]="programDisabled$ | async">Program</button>
+      <button
+        mat-button
+        type="button"
+        *ngIf="resultShow$ | async"
+        [color]="resultColor$ | async"
+        (click)="hideResult()"
+      >
+        {{ resultMessage$ | async }}
       </button>
     </div>
   </div>

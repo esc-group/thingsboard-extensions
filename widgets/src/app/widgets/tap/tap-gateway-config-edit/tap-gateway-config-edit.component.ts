@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { TapGateway } from "../models";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { TapGateway } from '../models';
 
 @Component({
-  selector: "ats-tap-gateway-config-edit",
-  templateUrl: "./tap-gateway-config-edit.component.html",
-  styleUrls: ["./tap-gateway-config-edit.component.scss"],
+  selector: 'ats-tap-gateway-config-edit',
+  templateUrl: './tap-gateway-config-edit.component.html',
+  styleUrls: ['./tap-gateway-config-edit.component.scss'],
 })
 export class TapGatewayConfigEditComponent implements OnInit {
   @Input() gateway: TapGateway;
@@ -14,47 +14,27 @@ export class TapGatewayConfigEditComponent implements OnInit {
   form = new FormGroup({});
 
   ngOnInit(): void {
+    this.form.addControl('deviceId', new FormControl<string>(this.gateway.deviceId));
+    this.form.addControl('deviceName', new FormControl<string>(this.gateway.deviceName));
     this.form.addControl(
-      "deviceId",
-      new FormControl<string>(this.gateway.deviceId)
+      'host',
+      new FormControl<string>(this.gateway.host, [Validators.required, Validators.minLength(1)])
     );
     this.form.addControl(
-      "deviceName",
-      new FormControl<string>(this.gateway.deviceName)
+      'port',
+      new FormControl<number>(this.gateway.port, [Validators.required, Validators.min(1), Validators.max(65535)])
     );
     this.form.addControl(
-      "host",
-      new FormControl<string>(this.gateway.host, [
-        Validators.required,
-        Validators.minLength(1),
-      ])
+      'heartbeatSeconds',
+      new FormControl<number>(this.gateway.heartbeatSeconds, [Validators.required, Validators.min(5)])
     );
     this.form.addControl(
-      "port",
-      new FormControl<number>(this.gateway.port, [
-        Validators.required,
-        Validators.min(1),
-        Validators.max(65535),
-      ])
+      'heartbeatNumber',
+      new FormControl<string>(this.gateway.heartbeatNumber, [Validators.minLength(1)])
     );
     this.form.addControl(
-      "heartbeatSeconds",
-      new FormControl<number>(this.gateway.heartbeatSeconds, [
-        Validators.required,
-        Validators.min(5),
-      ])
-    );
-    this.form.addControl(
-      "heartbeatNumber",
-      new FormControl<string>(this.gateway.heartbeatNumber, [
-        Validators.minLength(1),
-      ])
-    );
-    this.form.addControl(
-      "heartbeatMessage",
-      new FormControl<string>(this.gateway.heartbeatMessage, [
-        Validators.minLength(1),
-      ])
+      'heartbeatMessage',
+      new FormControl<string>(this.gateway.heartbeatMessage, [Validators.minLength(1)])
     );
   }
 

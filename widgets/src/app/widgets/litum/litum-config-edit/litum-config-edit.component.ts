@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { LitumConfig } from "../models";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { LitumConfig } from '../models';
 
 @Component({
-  selector: "ats-litum-config-edit",
-  templateUrl: "./litum-config-edit.component.html",
+  selector: 'ats-litum-config-edit',
+  templateUrl: './litum-config-edit.component.html',
 })
 export class LitumConfigEditComponent implements OnInit {
   @Input() config: LitumConfig;
@@ -13,33 +13,21 @@ export class LitumConfigEditComponent implements OnInit {
   form = new FormGroup({});
 
   ngOnInit(): void {
-    console.log("type  of config.url is " + typeof this.config.url);
-    console.log("value of config.url is " + this.config.url);
+    console.log('type  of config.url is ' + typeof this.config.url);
+    console.log('value of config.url is ' + this.config.url);
     this.form.addControl(
-      "url",
-      new FormControl<string>(this.config.url, [
-        Validators.required,
-        Validators.pattern(/.+/),
-      ])
+      'url',
+      new FormControl<string>(this.config.url, [Validators.required, Validators.pattern(/.+/)])
     );
     this.form.addControl(
-      "username",
-      new FormControl<string>(this.config.username, [
-        Validators.required,
-        Validators.minLength(1),
-      ])
+      'username',
+      new FormControl<string>(this.config.username, [Validators.required, Validators.minLength(1)])
     );
     this.form.addControl(
-      "password",
-      new FormControl<string>(this.config.password, [
-        Validators.required,
-        Validators.minLength(1),
-      ])
+      'password',
+      new FormControl<string>(this.config.password, [Validators.required, Validators.minLength(1)])
     );
-    this.form.addControl(
-      "verifySsl",
-      new FormControl<boolean>(this.config.verifySsl, [])
-    );
+    this.form.addControl('verifySsl', new FormControl<boolean>(this.config.verifySsl, []));
   }
 
   onSubmit() {

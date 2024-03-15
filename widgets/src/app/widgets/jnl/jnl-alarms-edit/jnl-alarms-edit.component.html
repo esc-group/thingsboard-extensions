@@ -1,27 +1,17 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <div fxLayout="column" fxFill fxLayoutGap="1rem" formArrayName="matching">
     <mat-accordion>
-      <mat-expansion-panel
-        #panel
-        *ngFor="let trigger of matching.controls; let i = index"
-        [formGroupName]="i"
-      >
+      <mat-expansion-panel #panel *ngFor="let trigger of matching.controls; let i = index" [formGroupName]="i">
         <mat-expansion-panel-header>
-          <mat-panel-title
-            >{{ i + 1 }}. {{ trigger.get("alarmType").value }}
-          </mat-panel-title>
-          <mat-panel-description
-            >{{ getEventCodeName(trigger.get("onEventCode").value) }}
-          </mat-panel-description>
+          <mat-panel-title>{{ i + 1 }}. {{ trigger.get('alarmType').value }} </mat-panel-title>
+          <mat-panel-description>{{ getEventCodeName(trigger.get('onEventCode').value) }} </mat-panel-description>
         </mat-expansion-panel-header>
         <div *ngIf="panel.opened" fxLayout="column" fxFill fxLayoutGap="1rem">
           <div fxLayout="row" fxFill fxLayoutGap="1rem">
             <mat-form-field fxFlex="40">
               <mat-label>Alarm Type</mat-label>
               <mat-select formControlName="alarmType">
-                <mat-option *ngFor="let type of alarmTypes" [value]="type"
-                  >{{ type }}
-                </mat-option>
+                <mat-option *ngFor="let type of alarmTypes" [value]="type">{{ type }} </mat-option>
               </mat-select>
             </mat-form-field>
             <mat-form-field fxFlex="40">
@@ -38,33 +28,20 @@
           <div fxLayout="row" fxFill fxLayoutGap="1rem">
             <mat-form-field fxFlex="40">
               <mat-label>Quantum Event</mat-label>
-              <mat-select
-                formControlName="onEventCode"
-                (valueChange)="setOffCode($event, trigger)"
-              >
-                <mat-option
-                  *ngFor="let code of eventCodes"
-                  [value]="code.onCode"
-                  >{{ code.name }}
-                </mat-option>
+              <mat-select formControlName="onEventCode" (valueChange)="setOffCode($event, trigger)">
+                <mat-option *ngFor="let code of eventCodes" [value]="code.onCode">{{ code.name }} </mat-option>
               </mat-select>
             </mat-form-field>
             <ng-container *ngIf="getRooms(trigger) as availableRooms">
               <mat-form-field fxFlex="40">
                 <mat-label>Add Qualifying Room</mat-label>
                 <mat-select [value]="availableRooms[0].id" #selectedRoom>
-                  <mat-option
-                    *ngFor="let room of availableRooms"
-                    [value]="room.id"
-                  >
+                  <mat-option *ngFor="let room of availableRooms" [value]="room.id">
                     {{ room.name }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-              <button
-                mat-icon-button
-                (click)="addRoom(selectedRoom.value, trigger)"
-              >
+              <button mat-icon-button (click)="addRoom(selectedRoom.value, trigger)">
                 <mat-icon>add</mat-icon>
               </button>
             </ng-container>
@@ -73,32 +50,23 @@
           <mat-list formArrayName="rooms">
             <mat-list-item
               [lines]="3"
-              *ngFor="
-                let room of getRoomIdArray(trigger).controls;
-                let j = index
-              "
+              *ngFor="let room of getRoomIdArray(trigger).controls; let j = index"
               [formGroupName]="j"
             >
               <div fxLayout="row" fxFill fxLayoutGap="1rem">
                 <span>{{ j + 1 }}</span>
                 <mat-form-field fxFlex="40">
-                  <mat-label>id = {{ room.get("id").value }}</mat-label>
+                  <mat-label>id = {{ room.get('id').value }}</mat-label>
                   <input matInput type="hidden" formControlName="id" />
                   <input matInput type="text" formControlName="name" readonly />
                 </mat-form-field>
-                <button
-                  mat-icon-button
-                  color="warn"
-                  (click)="getRoomIdArray(trigger).removeAt(j)"
-                >
+                <button mat-icon-button color="warn" (click)="getRoomIdArray(trigger).removeAt(j)">
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
             </mat-list-item>
           </mat-list>
-          <button mat-raised-button color="warn" (click)="matching.removeAt(i)">
-            Remove Trigger Item
-          </button>
+          <button mat-raised-button color="warn" (click)="matching.removeAt(i)">Remove Trigger Item</button>
         </div>
       </mat-expansion-panel>
     </mat-accordion>

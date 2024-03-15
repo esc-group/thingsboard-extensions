@@ -6,20 +6,13 @@
           <div fxLayout="row" fxLayoutGap="2rem">
             <mat-form-field appearance="fill" fxFlex="50">
               <mat-label>Name</mat-label>
-              <input
-                matInput
-                type="text"
-                [formControlName]="cls.FC_NAME"
-                [value]="selectedLevel.name"
-              />
+              <input matInput type="text" [formControlName]="cls.FC_NAME" [value]="selectedLevel.name" />
             </mat-form-field>
             <mat-form-field appearance="fill" fxFlex="50">
               <mat-label>Next Level</mat-label>
               <mat-select [formControlName]="cls.FC_NEXT">
                 <mat-option value="">[None]</mat-option>
-                <mat-option
-                  *ngFor="let levelName of allLevelNames$ | async"
-                  [value]="levelName"
+                <mat-option *ngFor="let levelName of allLevelNames$ | async" [value]="levelName"
                   >{{ levelName }}
                 </mat-option>
               </mat-select>
@@ -35,11 +28,7 @@
                 [value]="selectedLevel.timeout.toString()"
               />
             </mat-form-field>
-            <mat-form-field
-              appearance="fill"
-              hintLabel="Use value 0 for disabled."
-              fxFlex="50"
-            >
+            <mat-form-field appearance="fill" hintLabel="Use value 0 for disabled." fxFlex="50">
               <mat-label>Accepted Timeout</mat-label>
               <input
                 matInput
@@ -61,9 +50,7 @@
             >
               {{ alarmType }}
             </mat-list-option>
-            <mat-list-option
-              disabled
-              *ngIf="(allAlarmTypes$ | async).length === 0"
+            <mat-list-option disabled *ngIf="(allAlarmTypes$ | async).length === 0"
               >No alarm types to list
             </mat-list-option>
           </mat-selection-list>
@@ -79,11 +66,7 @@
             >
               {{ groupName }}
             </mat-list-option>
-            <mat-list-option
-              disabled
-              *ngIf="(allGroupNames$ | async).length === 0"
-              >No groups to list
-            </mat-list-option>
+            <mat-list-option disabled *ngIf="(allGroupNames$ | async).length === 0">No groups to list </mat-list-option>
           </mat-selection-list>
         </div>
       </mat-tab>
@@ -108,9 +91,7 @@
             <!--              <mat-option *ngFor="let lang of cls.LANGUAGES" [value]="lang[0]">{{ lang[1] }}</mat-option>-->
             <!--            </mat-select>-->
             <mat-select [(value)]="selectedLanguage">
-              <mat-option *ngFor="let lang of cls.LANGUAGES" [value]="lang.id"
-                >{{ lang.name }}
-              </mat-option>
+              <mat-option *ngFor="let lang of cls.LANGUAGES" [value]="lang.id">{{ lang.name }} </mat-option>
             </mat-select>
           </mat-form-field>
           <div fxLayout="column">
@@ -147,19 +128,13 @@
       <mat-tab label="Usage">
         <div class="level-tab">
           <mat-list role="list">
-            <mat-list-item
-              role="listitem"
-              *ngFor="let level of usedByLevels$ | async; index as i"
-            >
+            <mat-list-item role="listitem" *ngFor="let level of usedByLevels$ | async; index as i">
               <span>
                 <em style="margin-right: 0.8rem">{{ i + 1 }}.</em>
                 {{ level.name }}
               </span>
             </mat-list-item>
-            <mat-list-item
-              role="listitem"
-              *ngIf="(usedByLevels$ | async).length === 0"
-            >
+            <mat-list-item role="listitem" *ngIf="(usedByLevels$ | async).length === 0">
               <span> <em style="margin-right: 0.8rem">0</em>Not used. </span>
             </mat-list-item>
           </mat-list>

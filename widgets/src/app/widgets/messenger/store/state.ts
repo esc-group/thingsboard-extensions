@@ -1,4 +1,4 @@
-import { EscalationGroup, EscalationLevel } from "../models/escalation.models";
+import { EscalationGroup, EscalationLevel } from '../models/escalation.models';
 
 export type EntityId = string;
 export type SubEntityId = string;
@@ -42,7 +42,7 @@ export interface State {
   messengerId: string;
 }
 
-export const featureKey = "escalation";
+export const featureKey = 'escalation';
 
 export const initialState: State = {
   isLoading: false,
@@ -64,5 +64,5 @@ export const initialState: State = {
 
   outputDevices: [],
 
-  messengerId: "",
+  messengerId: '',
 };

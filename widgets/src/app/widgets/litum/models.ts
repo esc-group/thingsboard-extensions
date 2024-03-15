@@ -1,4 +1,4 @@
-import { AlarmSeverity } from "@shared/models/alarm.models";
+import { AlarmSeverity } from '@shared/models/alarm.models';
 
 export interface BusinessRule {
   id: number;

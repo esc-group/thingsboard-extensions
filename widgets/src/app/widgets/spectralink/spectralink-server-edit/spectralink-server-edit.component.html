@@ -3,44 +3,25 @@
     <div fxLayout="column" fxFill fxLayoutGap="1rem">
       <mat-form-field>
         <mat-label>Bind IP Address</mat-label>
-        <input
-          matInput
-          formControlName="bind"
-          type="text"
-          placeholder="0.0.0.0"
-        />
+        <input matInput formControlName="bind" type="text" placeholder="0.0.0.0" />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Advertise IP Address / Hostname</mat-label>
-        <input
-          matInput
-          formControlName="host"
-          type="text"
-          placeholder="localhost"
-        />
+        <input matInput formControlName="host" type="text" placeholder="localhost" />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Port Number</mat-label>
-        <input
-          matInput
-          formControlName="port"
-          type="number"
-          placeholder="9096"
-        />
+        <input matInput formControlName="port" type="number" placeholder="9096" />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Timezone</mat-label>
         <mat-select formControlName="timezone">
-          <mat-option *ngFor="let tz of timezones" [value]="tz"
-            >{{ tz }}
-          </mat-option>
+          <mat-option *ngFor="let tz of timezones" [value]="tz">{{ tz }} </mat-option>
         </mat-select>
-        <mat-hint align="start"
-          >Timezone set on base stations that will connect to us.
-        </mat-hint>
+        <mat-hint align="start">Timezone set on base stations that will connect to us. </mat-hint>
       </mat-form-field>
     </div>
     <div fxLayout="row" fxLayoutGap="1rem">

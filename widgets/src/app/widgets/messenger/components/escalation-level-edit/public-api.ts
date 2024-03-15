@@ -1,1 +1,1 @@
-export * from "./escalation-level-edit.component";
+export * from './escalation-level-edit.component';

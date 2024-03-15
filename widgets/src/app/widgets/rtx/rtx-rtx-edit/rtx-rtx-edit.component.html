@@ -3,64 +3,35 @@
     <div fxLayout="column" fxFill fxLayoutGap="1rem">
       <mat-form-field>
         <mat-label>IP Address</mat-label>
-        <input
-          matInput
-          formControlName="host"
-          type="text"
-          placeholder="0.0.0.0"
-        />
+        <input matInput formControlName="host" type="text" placeholder="0.0.0.0" />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Port Number</mat-label>
-        <input
-          matInput
-          formControlName="port"
-          type="number"
-          placeholder="9097"
-        />
+        <input matInput formControlName="port" type="number" placeholder="9097" />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>PBX Refresh (in seconds)</mat-label>
-        <input
-          matInput
-          formControlName="pbxRefreshSeconds"
-          type="number"
-          placeholder="10"
-        />
+        <input matInput formControlName="pbxRefreshSeconds" type="number" placeholder="10" />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Handset response timeout (in seconds)</mat-label>
-        <input
-          matInput
-          formControlName="rtxHandsetResponseTimeout"
-          type="number"
-          placeholder="10"
-        />
+        <input matInput formControlName="rtxHandsetResponseTimeout" type="number" placeholder="10" />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>User response timeout (in seconds)</mat-label>
-        <input
-          matInput
-          formControlName="rtxUserResponseTimeout"
-          type="number"
-          placeholder="300"
-        />
+        <input matInput formControlName="rtxUserResponseTimeout" type="number" placeholder="300" />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Timezone</mat-label>
         <mat-select formControlName="timezone">
-          <mat-option *ngFor="let tz of timezones" [value]="tz"
-            >{{ tz }}
-          </mat-option>
+          <mat-option *ngFor="let tz of timezones" [value]="tz">{{ tz }} </mat-option>
         </mat-select>
-        <mat-hint align="start"
-          >Timezone set on base stations that will connect to us.
-        </mat-hint>
+        <mat-hint align="start">Timezone set on base stations that will connect to us. </mat-hint>
       </mat-form-field>
     </div>
     <div fxLayout="row" fxLayoutGap="1rem">

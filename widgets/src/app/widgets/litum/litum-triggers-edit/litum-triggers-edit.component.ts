@@ -100,7 +100,7 @@ export class LitumTriggersEditComponent implements OnInit, OnDestroy, OnChanges 
           businessRuleId,
           alarmType,
           alarmSeverity,
-        } as AlarmConfig)
+        }) as AlarmConfig
     );
     this.save.next(alarmConfigs);
     this.savedUiRules = this.triggersArray.value;

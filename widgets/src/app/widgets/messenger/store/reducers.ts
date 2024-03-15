@@ -1,20 +1,13 @@
-import { deepClone, guid as uuid1 } from "@core/public-api";
-import { createReducer, on } from "@ngrx/store";
-import * as EscalationActions from "./actions";
-import {
-  Entity,
-  initialState,
-  State,
-  UiEscalationGroup,
-  UiEscalationLevel,
-} from "./state";
+import { deepClone, guid as uuid1 } from '@core/public-api';
+import { createReducer, on } from '@ngrx/store';
+import * as EscalationActions from './actions';
+import { Entity, initialState, State, UiEscalationGroup, UiEscalationLevel } from './state';
 
 interface HasName {
   name: string;
 }
 
-const byNameField = (item1: HasName, item2: HasName): number =>
-  item1.name.localeCompare(item2.name);
+const byNameField = (item1: HasName, item2: HasName): number => item1.name.localeCompare(item2.name);
 
 export const escalationReducer = createReducer(
   initialState,
@@ -57,16 +50,10 @@ export const escalationReducer = createReducer(
   })),
 
   on(EscalationActions.setEscalationConfig, (state, action) => {
-    const levels: UiEscalationLevel[] = action.levels
-      .map((level) => ({ id: uuid1(), ...level }))
-      .sort(byNameField);
-    const groups: UiEscalationGroup[] = action.groups
-      .map((group) => ({ id: uuid1(), ...group }))
-      .sort(byNameField);
-    const selectedLevel: UiEscalationLevel =
-      levels.length > 0 ? levels[0] : null;
-    const selectedGroup: UiEscalationGroup =
-      groups.length > 0 ? groups[0] : null;
+    const levels: UiEscalationLevel[] = action.levels.map((level) => ({ id: uuid1(), ...level })).sort(byNameField);
+    const groups: UiEscalationGroup[] = action.groups.map((group) => ({ id: uuid1(), ...group })).sort(byNameField);
+    const selectedLevel: UiEscalationLevel = levels.length > 0 ? levels[0] : null;
+    const selectedGroup: UiEscalationGroup = groups.length > 0 ? groups[0] : null;
     return {
       ...state,
       error: null,
@@ -107,7 +94,7 @@ export const escalationReducer = createReducer(
     if (state.selectedLevel === null) {
       return state;
     }
-    console.log("addGroupToLevel>", action.group);
+    console.log('addGroupToLevel>', action.group);
     const newLevel = {
       ...state.selectedLevel,
       groups: [...state.selectedLevel.groups, action.group],
@@ -115,9 +102,7 @@ export const escalationReducer = createReducer(
     return {
       ...state,
       selectedLevel: newLevel,
-      levels: state.levels.map((level) =>
-        level.name === newLevel.name ? newLevel : level
-      ),
+      levels: state.levels.map((level) => (level.name === newLevel.name ? newLevel : level)),
     };
   }),
   on(EscalationActions.removeGroupFromLevel, (state, action) => {
@@ -126,16 +111,12 @@ export const escalationReducer = createReducer(
     }
     const newLevel = {
       ...state.selectedLevel,
-      groups: state.selectedLevel.groups.filter(
-        (group) => group !== action.group
-      ),
+      groups: state.selectedLevel.groups.filter((group) => group !== action.group),
     };
     return {
       ...state,
       selectedLevel: newLevel,
-      levels: state.levels.map((level) =>
-        level.name === newLevel.name ? newLevel : level
-      ),
+      levels: state.levels.map((level) => (level.name === newLevel.name ? newLevel : level)),
     };
   }),
   on(EscalationActions.addDeviceToLevel, (state, action) => {
@@ -149,9 +130,7 @@ export const escalationReducer = createReducer(
     return {
       ...state,
       selectedLevel: newLevel,
-      levels: state.levels.map((level) =>
-        level.name === newLevel.name ? newLevel : level
-      ),
+      levels: state.levels.map((level) => (level.name === newLevel.name ? newLevel : level)),
     };
   }),
   on(EscalationActions.removeDeviceFromLevel, (state, action) => {
@@ -160,16 +139,12 @@ export const escalationReducer = createReducer(
     }
     const newLevel = {
       ...state.selectedLevel,
-      devices: state.selectedLevel.devices.filter(
-        (device) => device !== action.device
-      ),
+      devices: state.selectedLevel.devices.filter((device) => device !== action.device),
     };
     return {
       ...state,
       selectedLevel: newLevel,
-      levels: state.levels.map((level) =>
-        level.name === newLevel.name ? newLevel : level
-      ),
+      levels: state.levels.map((level) => (level.name === newLevel.name ? newLevel : level)),
     };
   }),
   on(EscalationActions.addAlarmToLevel, (state, action) => {
@@ -183,9 +158,7 @@ export const escalationReducer = createReducer(
     return {
       ...state,
       selectedLevel: newLevel,
-      levels: state.levels.map((level) =>
-        level.name === newLevel.name ? newLevel : level
-      ),
+      levels: state.levels.map((level) => (level.name === newLevel.name ? newLevel : level)),
     };
   }),
   on(EscalationActions.removeAlarmFromLevel, (state, action) => {
@@ -194,16 +167,12 @@ export const escalationReducer = createReducer(
     }
     const newLevel = {
       ...state.selectedLevel,
-      alarms: state.selectedLevel.alarms.filter(
-        (alarm) => alarm !== action.alarm
-      ),
+      alarms: state.selectedLevel.alarms.filter((alarm) => alarm !== action.alarm),
     };
     return {
       ...state,
       selectedLevel: newLevel,
-      levels: state.levels.map((level) =>
-        level.name === newLevel.name ? newLevel : level
-      ),
+      levels: state.levels.map((level) => (level.name === newLevel.name ? newLevel : level)),
     };
   }),
   on(EscalationActions.addDeviceToGroup, (state, action) => {
@@ -217,9 +186,7 @@ export const escalationReducer = createReducer(
     return {
       ...state,
       selectedGroup: newGroup,
-      groups: state.groups.map((group) =>
-        group.id === newGroup.id ? newGroup : group
-      ),
+      groups: state.groups.map((group) => (group.id === newGroup.id ? newGroup : group)),
     };
   }),
   on(EscalationActions.removeDeviceFromGroup, (state, action) => {
@@ -228,22 +195,16 @@ export const escalationReducer = createReducer(
     }
     const newGroup = {
       ...state.selectedGroup,
-      devices: state.selectedGroup.devices.filter(
-        (deviceId) => deviceId !== action.device.id
-      ),
+      devices: state.selectedGroup.devices.filter((deviceId) => deviceId !== action.device.id),
     };
     return {
       ...state,
       selectedGroup: newGroup,
-      groups: state.groups.map((group) =>
-        group.id === newGroup.id ? newGroup : group
-      ),
+      groups: state.groups.map((group) => (group.id === newGroup.id ? newGroup : group)),
     };
   }),
   on(EscalationActions.deleteGroup, (state) => {
-    const groups = state.groups.filter(
-      (group) => group.id !== state.selectedGroup.id
-    );
+    const groups = state.groups.filter((group) => group.id !== state.selectedGroup.id);
     const selectedGroup = groups.length > 0 ? groups[0] : null;
     return { ...state, groups, selectedGroup };
   }),
@@ -264,9 +225,7 @@ export const escalationReducer = createReducer(
     if (state.selectedLevel === null) {
       return state;
     }
-    const levels = state.levels.filter(
-      (level) => level.name !== state.selectedLevel.name
-    );
+    const levels = state.levels.filter((level) => level.name !== state.selectedLevel.name);
     return {
       ...state,
       levels,
@@ -281,8 +240,7 @@ export const escalationReducer = createReducer(
     const selectedLevel: UiEscalationLevel = {
       ...state.selectedLevel,
       name,
-      next:
-        state.selectedLevel.next === oldName ? name : state.selectedLevel.next,
+      next: state.selectedLevel.next === oldName ? name : state.selectedLevel.next,
     };
     const levels = state.levels.map((level) =>
       level === state.selectedLevel
@@ -301,8 +259,7 @@ export const escalationReducer = createReducer(
     const oldName = state.selectedGroup.name;
     const selectedGroup: UiEscalationGroup = { ...state.selectedGroup, name };
     const groups = state.groups.map(
-      (group: UiEscalationGroup): UiEscalationGroup =>
-        group.id === state.selectedGroup.id ? selectedGroup : group
+      (group: UiEscalationGroup): UiEscalationGroup => (group.id === state.selectedGroup.id ? selectedGroup : group)
     );
     const levels = state.levels.map(
       (level: UiEscalationLevel): UiEscalationLevel => ({
@@ -311,14 +268,12 @@ export const escalationReducer = createReducer(
       })
     );
     const selectedLevel =
-      state.selectedLevel === null
-        ? null
-        : levels.filter((level) => level.id === state.selectedLevel.id)[0];
+      state.selectedLevel === null ? null : levels.filter((level) => level.id === state.selectedLevel.id)[0];
     return { ...state, levels, groups, selectedGroup, selectedLevel };
   }),
   on(EscalationActions.patchLevel, (state, { patch }) => {
-    if (Object.keys(patch).indexOf("name") !== -1) {
-      throw new Error("Invalid Operation - Must use setLevelName action");
+    if (Object.keys(patch).indexOf('name') !== -1) {
+      throw new Error('Invalid Operation - Must use setLevelName action');
     }
     if (state.selectedLevel === null) {
       return state;
@@ -327,9 +282,7 @@ export const escalationReducer = createReducer(
       ...state.selectedLevel,
       ...patch,
     };
-    const levels = state.levels.map((level) =>
-      level === state.selectedLevel ? selectedLevel : level
-    );
+    const levels = state.levels.map((level) => (level === state.selectedLevel ? selectedLevel : level));
     return { ...state, levels, selectedLevel };
   }),
   on(EscalationActions.setRecentAlarmTypes, (state, { alarmTypes }) => {
@@ -345,25 +298,19 @@ export const escalationReducer = createReducer(
   on(EscalationActions.setDispatchTemplate, (state, { language, template }) => {
     let selectedLevel: UiEscalationLevel = { ...state.selectedLevel };
     selectedLevel.dispatch[language] = template;
-    const levels = state.levels.map((level) =>
-      level === state.selectedLevel ? selectedLevel : level
-    );
+    const levels = state.levels.map((level) => (level === state.selectedLevel ? selectedLevel : level));
     return { ...state, levels, selectedLevel };
   }),
   on(EscalationActions.setAcceptTemplate, (state, { language, template }) => {
     let selectedLevel: UiEscalationLevel = { ...state.selectedLevel };
     selectedLevel.accept[language] = template;
-    const levels = state.levels.map((level) =>
-      level === state.selectedLevel ? selectedLevel : level
-    );
+    const levels = state.levels.map((level) => (level === state.selectedLevel ? selectedLevel : level));
     return { ...state, levels, selectedLevel };
   }),
   on(EscalationActions.setCancelTemplate, (state, { language, template }) => {
     let selectedLevel: UiEscalationLevel = { ...state.selectedLevel };
     selectedLevel.cancel[language] = template;
-    const levels = state.levels.map((level) =>
-      level === state.selectedLevel ? selectedLevel : level
-    );
+    const levels = state.levels.map((level) => (level === state.selectedLevel ? selectedLevel : level));
     return { ...state, levels, selectedLevel };
   })
 );

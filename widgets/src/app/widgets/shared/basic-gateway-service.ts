@@ -1,9 +1,4 @@
-import {
-  AlarmService,
-  AttributeService,
-  DeviceService,
-  EntityService,
-} from "@core/public-api";
+import { AlarmService, AttributeService, DeviceService, EntityService } from '@core/public-api';
 import {
   AlarmInfo,
   AlarmQuery,
@@ -15,10 +10,10 @@ import {
   RpcStatus,
   TimePageLink,
   TimeseriesData,
-} from "@shared/public-api";
-import { interval, Observable, of } from "rxjs";
-import * as op from "rxjs/operators";
-import { BasicRpcResponse } from "./models";
+} from '@shared/public-api';
+import { interval, Observable, of } from 'rxjs';
+import * as op from 'rxjs/operators';
+import { BasicRpcResponse } from './models';
 
 export class BasicGatewayService {
   constructor(
@@ -45,35 +40,20 @@ export class BasicGatewayService {
     const startTime = new Date().getTime() - daysBackToCheck * 86_400_000;
     // WARNING: ThingsBoard's AlarmQuery class does not match JSON schema of Java Controller
     const pageLink = new TimePageLink(32, 0, undefined, undefined, startTime);
-    const query = new AlarmQuery(
-      undefined,
-      pageLink,
-      undefined,
-      undefined,
-      false
-    );
+    const query = new AlarmQuery(undefined, pageLink, undefined, undefined, false);
     return this.alarmService.getAllAlarms(query).pipe(
       op.first(),
       op.map((pageData) => {
         const alarmTypesSet = new Set<string>();
-        pageData.data.forEach((alarm: AlarmInfo) =>
-          alarmTypesSet.add(alarm.type)
-        );
+        pageData.data.forEach((alarm: AlarmInfo) => alarmTypesSet.add(alarm.type));
         return Array.from(alarmTypesSet.values());
       })
     );
   }
 
-  protected getSingleAttribute<T>(
-    id: string,
-    attributeName: string
-  ): Observable<T> {
+  protected getSingleAttribute<T>(id: string, attributeName: string): Observable<T> {
     return this.attributeService
-      .getEntityAttributes(
-        { id: id, entityType: EntityType.DEVICE },
-        AttributeScope.CLIENT_SCOPE,
-        [attributeName]
-      )
+      .getEntityAttributes({ id: id, entityType: EntityType.DEVICE }, AttributeScope.CLIENT_SCOPE, [attributeName])
       .pipe(
         op.first(),
         op.map((attributeData: AttributeData[]) => {
@@ -82,9 +62,9 @@ export class BasicGatewayService {
           } else {
             let value = attributeData[0].value;
             const isJsonValue = Boolean(
-              typeof value === "string" &&
-                ((value[0] === "{" && value[value.length - 1] === "}") ||
-                  (value[0] === "[" && value[value.length - 1] == "]"))
+              typeof value === 'string' &&
+                ((value[0] === '{' && value[value.length - 1] === '}') ||
+                  (value[0] === '[' && value[value.length - 1] == ']'))
             );
             if (isJsonValue) value = JSON.parse(value);
             return value as T;
@@ -93,28 +73,17 @@ export class BasicGatewayService {
       );
   }
 
-  protected setSingleAttribute(
-    id: string,
-    attributeName: string,
-    value: any
-  ): Observable<any> {
+  protected setSingleAttribute(id: string, attributeName: string, value: any): Observable<any> {
     return this.attributeService
-      .saveEntityAttributes(
-        { id: id, entityType: EntityType.DEVICE },
-        AttributeScope.SHARED_SCOPE,
-        [{ key: attributeName, value: value }]
-      )
+      .saveEntityAttributes({ id: id, entityType: EntityType.DEVICE }, AttributeScope.SHARED_SCOPE, [
+        { key: attributeName, value: value },
+      ])
       .pipe(op.first());
   }
 
-  protected getSingleTimeSeries<T>(
-    id: string,
-    attributeName: string
-  ): Observable<T> {
+  protected getSingleTimeSeries<T>(id: string, attributeName: string): Observable<T> {
     return this.attributeService
-      .getEntityTimeseriesLatest({ id: id, entityType: EntityType.DEVICE }, [
-        attributeName,
-      ])
+      .getEntityTimeseriesLatest({ id: id, entityType: EntityType.DEVICE }, [attributeName])
       .pipe(
         op.first(),
         op.map((data: TimeseriesData) => {
@@ -142,21 +111,18 @@ export class BasicGatewayService {
         op.first(),
         op.delay(delay),
         op.exhaustMap((response) =>
-          this.deviceService.getPersistedRpc(response["rpcId"]).pipe(
+          this.deviceService.getPersistedRpc(response['rpcId']).pipe(
             op.first(),
-            op.delayWhen((rpc: PersistentRpc) =>
-              interval(rpc.status === RpcStatus.SUCCESSFUL ? 0 : delay)
-            ),
+            op.delayWhen((rpc: PersistentRpc) => interval(rpc.status === RpcStatus.SUCCESSFUL ? 0 : delay)),
             op.map((rpc: PersistentRpc) => {
-              if (rpc.status !== RpcStatus.SUCCESSFUL)
-                throw new Error("RPC result not yet ready"); // kicks in retry below
+              if (rpc.status !== RpcStatus.SUCCESSFUL) throw new Error('RPC result not yet ready'); // kicks in retry below
               return rpc.response as T; // passes through retry below
             }),
             op.retry({
               delay: () => {
                 /* only retry when we haven't run out of time */
                 const elapsed = (new Date() as any as number) - start;
-                if (timeout - elapsed <= 0) throw new Error("RPC timed out"); // do not retry
+                if (timeout - elapsed <= 0) throw new Error('RPC timed out'); // do not retry
                 return of(null); // retry
               },
             })
@@ -165,19 +131,11 @@ export class BasicGatewayService {
       );
   }
 
-  protected getConfigValueByRpc<T>(
-    id: string,
-    method: string,
-    timeout: number = 5e3
-  ): Observable<T> {
+  protected getConfigValueByRpc<T>(id: string, method: string, timeout: number = 5e3): Observable<T> {
     return this.doRpc<T>(id, method, {}, timeout);
   }
 
-  protected setConfigValueByRpc(
-    id: string,
-    method: string,
-    params: any
-  ): Observable<string> {
+  protected setConfigValueByRpc(id: string, method: string, params: any): Observable<string> {
     return this.deviceService.sendTwoWayRpcCommand(id, { method, params }).pipe(
       op.first(),
       op.map((response: BasicRpcResponse) => {

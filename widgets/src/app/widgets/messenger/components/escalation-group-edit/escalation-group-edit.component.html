@@ -8,10 +8,7 @@
     </div>
   </mat-tab>
   <mat-tab label="Devices">
-    <mat-selection-list
-      *ngIf="group !== null"
-      (selectionChange)="selectionChange($event)"
-    >
+    <mat-selection-list *ngIf="group !== null" (selectionChange)="selectionChange($event)">
       <mat-list-option
         *ngFor="let device of devices"
         [value]="device"
@@ -22,10 +19,7 @@
   </mat-tab>
   <mat-tab label="Usage">
     <mat-list role="list">
-      <mat-list-item
-        role="listitem"
-        *ngFor="let level of usedByLevels; index as i"
-      >
+      <mat-list-item role="listitem" *ngFor="let level of usedByLevels; index as i">
         <span>
           <em style="margin-right: 0.8rem">{{ i + 1 }}.</em> {{ level.name }}
         </span>
