@@ -120,7 +120,6 @@ export class LitumEditComponent extends PageComponent implements OnInit, OnDestr
             ),
             this.litumService.getAlarmConfig(litumId).pipe(
               op.tap((config: AlarmConfig[]) => {
-                console.log('litumService.getAlarmConfig tap', config);
                 this.triggersConfig$.next(config);
               })
             ),
@@ -129,16 +128,12 @@ export class LitumEditComponent extends PageComponent implements OnInit, OnDestr
       )
       .subscribe({
         next: () => {
-          console.log('!!!!!!!!!!!!!! next');
           this.isLoadingBusinessRules$.next(false);
         },
         error: (error: Error) => {
-          console.log(`"!!!!!!!!!!!!!! error ${error.message}`);
-          // this.businessRulesError$.next(`Load failure: ${error.message}`)
-          //this.ctx.showToast("error", `Load failure: ${error.message}`, 3000, "bottom", "center", "dashboardDialog")
+          this.businessRulesError$.next(`Load failure: ${error.message}`);
         },
         complete: () => {
-          console.log('!!!!!!!!!!!!!! complete');
           subscription.unsubscribe();
         },
       });
@@ -152,10 +147,10 @@ export class LitumEditComponent extends PageComponent implements OnInit, OnDestr
     const saveSubscription = this.litumService.setAlarmConfig(this.litumId$.value, config).subscribe({
       next: () => {
         this.triggersConfig$.next(config);
-        this.ctx.dialogs.alert('Save success', '');
+        this.ctx.showSuccessToast('Save success', 3e3, 'bottom', 'center', 'triggers-save');
       },
-      error: (error: Error) => {
-        this.ctx.dialogs.errorAlert('Save failed', '', error);
+      error: () => {
+        this.ctx.showErrorToast('Save failed', 'bottom', 'center', 'triggers-save');
       },
       complete: () => {
         this.isSaving$.next(false);

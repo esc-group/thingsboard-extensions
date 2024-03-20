@@ -15,12 +15,13 @@
         [alarmConfig]="triggersConfig$ | async"
         (save)="onTriggersSave($event)"
       ></ats-litum-triggers-edit>
+      <div tb-toast toastTarget="triggers-save"></div>
     </ng-container>
   </mat-expansion-panel>
 
   <mat-expansion-panel>
     <mat-expansion-panel-header>
-      <mat-panel-title>Litum 3rd Party Web Server Configuration </mat-panel-title>
+      <mat-panel-title>Litum 3rd Party Web Server Configuration</mat-panel-title>
     </mat-expansion-panel-header>
     <p *ngIf="isLoadingLitumConfig$ | async">Loading...</p>
     <ats-litum-config-edit

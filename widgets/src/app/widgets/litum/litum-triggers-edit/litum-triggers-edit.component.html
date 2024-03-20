@@ -20,14 +20,14 @@
       <div fxLayout="row" fxFill fxLayoutGap="1rem">
         <span>{{ i + 1 }}.</span>
         <mat-form-field fxFlex="40">
-          <mat-label>Business Rule {{ group.get('businessRuleId').value }} </mat-label>
+          <mat-label>Business Rule {{ group.get('businessRuleId').value }}</mat-label>
           <input matInput type="text" readonly formControlName="businessRuleName" />
           <input matInput type="hidden" formControlName="businessRuleId" />
         </mat-form-field>
         <mat-form-field fxFlex="40">
           <mat-label>Alarm Type</mat-label>
           <mat-select formControlName="alarmType">
-            <mat-option *ngFor="let type of alarmTypes" [value]="type">{{ type }} </mat-option>
+            <mat-option *ngFor="let type of alarmTypes" [value]="type">{{ type }}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field fxFlex="20">

@@ -35,7 +35,7 @@ export class LitumTriggersEditComponent implements OnInit, OnDestroy, OnChanges 
     if (this.businessRules === undefined || this.businessRules === null || this.businessRules.length === 0) {
       throw new Error('rules value is invalid');
     }
-    if (this.alarmTypes === undefined || this.alarmTypes === null || this.alarmTypes.length === 0) {
+    if (this.alarmTypes === undefined || this.alarmTypes === null) {
       throw new Error('alarmTypes value is invalid');
     }
     if (this.alarmConfig === undefined || this.alarmConfig === null) {
