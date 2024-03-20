@@ -1,4 +1,4 @@
-import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AppState } from '@core/core.state';
 import { WidgetContext } from '@home/models/widget-component.models';
 import { Store } from '@ngrx/store';
@@ -7,7 +7,7 @@ import { BehaviorSubject, forkJoin, of, Subscription } from 'rxjs';
 import * as op from 'rxjs/operators';
 import { AlarmTypeEditComponent } from '../../alarm/alarm-type-edit/alarm-type-edit.component';
 import { LitumService } from '../litum.service';
-import { BusinessRule, GatewayConfig, LitumConfig, AlarmConfig } from '../models';
+import { BusinessRule, LocalServerConfig, RemoteServerConfig, AlarmConfig } from '../models';
 
 @Component({
   selector: 'ats-litum-edit',
@@ -15,8 +15,6 @@ import { BusinessRule, GatewayConfig, LitumConfig, AlarmConfig } from '../models
   styleUrls: ['./litum-edit.component.scss'],
 })
 export class LitumEditComponent extends PageComponent implements OnInit, OnDestroy {
-  @ViewChild('businessRulesError')
-  businessRulesError: ElementRef<HTMLParagraphElement>;
   @ViewChild('userAlarmTypes') userAlarmTypes: AlarmTypeEditComponent;
 
   protected subscriptions: Subscription[] = [];
@@ -35,8 +33,8 @@ export class LitumEditComponent extends PageComponent implements OnInit, OnDestr
   configuredAlarmTypes$ = new BehaviorSubject<string[]>([]);
   combinedAlarmTypes$ = new BehaviorSubject<string[]>([]);
   allBusinessRules$ = new BehaviorSubject<BusinessRule[]>([]);
-  litumConfig$ = new BehaviorSubject<LitumConfig>(null);
-  gatewayConfig$ = new BehaviorSubject<GatewayConfig>(null);
+  remoteServerConfig$ = new BehaviorSubject<RemoteServerConfig>(null);
+  localServerConfig$ = new BehaviorSubject<LocalServerConfig>(null);
 
   constructor(
     protected store: Store<AppState>,
@@ -90,15 +88,15 @@ export class LitumEditComponent extends PageComponent implements OnInit, OnDestr
         }),
         op.switchMap((litumId) =>
           forkJoin([
-            this.litumService.getLitumConfig(litumId).pipe(
+            this.litumService.getRemoteServerConfig(litumId).pipe(
               op.tap((config) => {
-                this.litumConfig$.next(config);
+                this.remoteServerConfig$.next(config);
                 this.isLoadingLitumConfig$.next(false);
               })
             ),
-            this.litumService.getGatewayConfig(litumId).pipe(
+            this.litumService.getLocalServerConfig(litumId).pipe(
               op.tap((config) => {
-                this.gatewayConfig$.next(config);
+                this.localServerConfig$.next(config);
                 this.isLoadingGatewayConfig$.next(false);
               })
             ),
@@ -159,16 +157,16 @@ export class LitumEditComponent extends PageComponent implements OnInit, OnDestr
     });
   };
 
-  onGatewaySave = (config: GatewayConfig): void => {
-    const saveSubscription = this.litumService.setGatewayConfig(this.litumId$.value, config).subscribe({
+  onLocalServerConfigSave = (config: LocalServerConfig): void => {
+    const saveSubscription = this.litumService.setLocalServerConfig(this.litumId$.value, config).subscribe({
       complete: () => {
         saveSubscription.unsubscribe();
       },
     });
   };
 
-  onLitumSave = (config: LitumConfig): void => {
-    const saveSubscription = this.litumService.setLitumConfig(this.litumId$.value, config).subscribe({
+  onRemoteServerConfigSave = (config: RemoteServerConfig): void => {
+    const saveSubscription = this.litumService.setRemoteServerConfig(this.litumId$.value, config).subscribe({
       complete: () => {
         saveSubscription.unsubscribe();
       },

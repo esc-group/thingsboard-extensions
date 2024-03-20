@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { LitumConfig } from '../models';
+import { RemoteServerConfig } from '../models';
 
 @Component({
   selector: 'ats-litum-config-edit',
   templateUrl: './litum-config-edit.component.html',
 })
 export class LitumConfigEditComponent implements OnInit {
-  @Input() config: LitumConfig;
-  @Output() save = new EventEmitter<LitumConfig>();
+  @Input() config: RemoteServerConfig;
+  @Output() save = new EventEmitter<RemoteServerConfig>();
 
   form = new FormGroup({});
 
@@ -31,7 +31,7 @@ export class LitumConfigEditComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.form.valid) this.save.next(this.form.value as LitumConfig);
+    if (this.form.valid) this.save.next(this.form.value as RemoteServerConfig);
   }
 
   onReset() {

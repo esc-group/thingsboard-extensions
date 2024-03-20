@@ -3,7 +3,11 @@ import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { AlarmSeverity } from '@shared/public-api';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import * as op from 'rxjs/operators';
-import { AlarmConfig, BusinessRule, UiAlarmConfig } from '../models';
+import { AlarmConfig, BusinessRule } from '../models';
+
+interface UiAlarmConfig extends AlarmConfig {
+  businessRuleName: string;
+}
 
 @Component({
   selector: 'ats-litum-triggers-edit',

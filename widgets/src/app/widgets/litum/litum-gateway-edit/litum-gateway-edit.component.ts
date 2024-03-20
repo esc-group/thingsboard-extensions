@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { GatewayConfig } from '../models';
+import { LocalServerConfig } from '../models';
 
 @Component({
   selector: 'ats-litum-gateway-edit',
   templateUrl: './litum-gateway-edit.component.html',
 })
 export class LitumGatewayEditComponent implements OnInit {
-  @Input() config: GatewayConfig;
-  @Output() save = new EventEmitter<GatewayConfig>();
+  @Input() config: LocalServerConfig;
+  @Output() save = new EventEmitter<LocalServerConfig>();
 
   form = new FormGroup({});
 
@@ -24,7 +24,7 @@ export class LitumGatewayEditComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.form.valid) this.save.next(this.form.value as GatewayConfig);
+    if (this.form.valid) this.save.next(this.form.value as LocalServerConfig);
   }
 
   onReset() {

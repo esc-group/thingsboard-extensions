@@ -11,18 +11,14 @@ export interface AlarmConfig {
   alarmSeverity: AlarmSeverity;
 }
 
-export interface UiAlarmConfig extends AlarmConfig {
-  businessRuleName: string;
-}
-
-export interface LitumConfig {
+export interface RemoteServerConfig {
   url: string;
   username: string;
   password: string;
   verifySsl: boolean;
 }
 
-export interface GatewayConfig {
+export interface LocalServerConfig {
   host: string;
   port: number;
 }

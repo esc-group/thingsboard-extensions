@@ -26,8 +26,8 @@
     <p *ngIf="isLoadingLitumConfig$ | async">Loading...</p>
     <ats-litum-config-edit
       *ngIf="(isLoadingLitumConfig$ | async) === false"
-      [config]="litumConfig$ | async"
-      (save)="onLitumSave($event)"
+      [config]="remoteServerConfig$ | async"
+      (save)="onRemoteServerConfigSave($event)"
     ></ats-litum-config-edit>
   </mat-expansion-panel>
 
@@ -38,8 +38,8 @@
     <p *ngIf="isLoadingGatewayConfig$ | async">Loading...</p>
     <ats-litum-gateway-edit
       *ngIf="!(isLoadingGatewayConfig$ | async)"
-      [config]="gatewayConfig$ | async"
-      (save)="onGatewaySave($event)"
+      [config]="localServerConfig$ | async"
+      (save)="onLocalServerConfigSave($event)"
     ></ats-litum-gateway-edit>
   </mat-expansion-panel>
 </mat-accordion>

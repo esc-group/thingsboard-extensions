@@ -18,7 +18,7 @@ import {
 import { firstValueFrom, forkJoin, from, Observable, of } from 'rxjs';
 import * as op from 'rxjs/operators';
 import { BasicGatewayService } from '../shared/basic-gateway-service';
-import { BusinessRule, GatewayConfig, LitumConfig, Person, Tag, TagData, Zone, AlarmConfig } from './models';
+import { BusinessRule, LocalServerConfig, RemoteServerConfig, Person, Tag, TagData, Zone, AlarmConfig } from './models';
 
 const GET_GATEWAY_CONFIG_RPC = 'get_web_config';
 const SET_GATEWAY_CONFIG_RPC = 'set_web_config';
@@ -55,12 +55,20 @@ export class LitumService extends BasicGatewayService {
     super(alarmService, attributeService, entityService, deviceService);
   }
 
-  getLitumConfig(gatewayId: string): Observable<LitumConfig> {
-    return this.twoWayPersistentRpc<LitumConfig>(gatewayId, GET_LITUM_CONFIG_RPC);
+  getRemoteServerConfig(gatewayId: string): Observable<RemoteServerConfig> {
+    return this.twoWayPersistentRpc<RemoteServerConfig>(gatewayId, GET_LITUM_CONFIG_RPC);
   }
 
-  getGatewayConfig(gatewayId: string): Observable<GatewayConfig> {
-    return this.twoWayPersistentRpc<GatewayConfig>(gatewayId, GET_GATEWAY_CONFIG_RPC);
+  setRemoteServerConfig(gatewayId: string, litumConfig: RemoteServerConfig): Observable<void> {
+    return this.oneWayPersistentRpc(gatewayId, SET_LITUM_CONFIG_RPC, litumConfig);
+  }
+
+  getLocalServerConfig(gatewayId: string): Observable<LocalServerConfig> {
+    return this.twoWayPersistentRpc<LocalServerConfig>(gatewayId, GET_GATEWAY_CONFIG_RPC);
+  }
+
+  setLocalServerConfig(gatewayId: string, gatewayConfig: LocalServerConfig): Observable<void> {
+    return this.oneWayPersistentRpc(gatewayId, SET_GATEWAY_CONFIG_RPC, gatewayConfig);
   }
 
   getAlarmConfig(gatewayId: string): Observable<AlarmConfig[]> {
@@ -69,14 +77,6 @@ export class LitumService extends BasicGatewayService {
 
   setAlarmConfig(gatewayId: string, alarmConfig: AlarmConfig[]): Observable<void> {
     return this.oneWayPersistentRpc(gatewayId, SET_ALARM_CONFIG_RPC, alarmConfig);
-  }
-
-  setLitumConfig(gatewayId: string, litumConfig: LitumConfig): Observable<any> {
-    return this.oneWayPersistentRpc(gatewayId, SET_LITUM_CONFIG_RPC, litumConfig);
-  }
-
-  setGatewayConfig(gatewayId: string, gatewayConfig: GatewayConfig): Observable<any> {
-    return this.oneWayPersistentRpc(gatewayId, SET_GATEWAY_CONFIG_RPC, gatewayConfig);
   }
 
   getBusinessRules(gatewayId: string): Observable<BusinessRule[]> {
