@@ -22,22 +22,22 @@ export class SpectralinkService extends BasicGatewayService {
   }
 
   getServerConfig(gatewayId: string): Observable<ServerConfig> {
-    return this.getConfigValueByRpc<ServerConfig>(gatewayId, GET_SERVER_CONFIG_RPC);
+    return this.twoWayPersistentRpc<ServerConfig>(gatewayId, GET_SERVER_CONFIG_RPC);
   }
 
-  setServerConfig(gatewayId: string, config: ServerConfig): Observable<any> {
-    return this.setConfigValueByRpc(gatewayId, SET_SERVER_CONFIG_RPC, config);
+  setServerConfig(gatewayId: string, config: ServerConfig): Observable<void> {
+    return this.oneWayPersistentRpc(gatewayId, SET_SERVER_CONFIG_RPC, config);
   }
 
   getHandsetConfig(gatewayId: string): Observable<HandsetConfig> {
-    return this.getConfigValueByRpc<HandsetConfig>(gatewayId, GET_CLIENT_CONFIG_RPC);
+    return this.twoWayPersistentRpc<HandsetConfig>(gatewayId, GET_CLIENT_CONFIG_RPC);
   }
 
-  setHandsetConfig(gatewayId: string, config: HandsetConfig): Observable<any> {
-    return this.setConfigValueByRpc(gatewayId, SET_CLIENT_CONFIG_RPC, config);
+  setHandsetConfig(gatewayId: string, config: HandsetConfig): Observable<void> {
+    return this.oneWayPersistentRpc(gatewayId, SET_CLIENT_CONFIG_RPC, config);
   }
 
   programHandset(gatewayId: string, handset: ProgramHandsetRpc): Observable<boolean> {
-    return this.doRpc<boolean>(gatewayId, 'program_handset', handset, 12e3);
+    return this.twoWayPersistentRpc<boolean>(gatewayId, 'program_handset', handset, 12e3);
   }
 }

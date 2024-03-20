@@ -56,27 +56,27 @@ export class LitumService extends BasicGatewayService {
   }
 
   getLitumConfig(gatewayId: string): Observable<LitumConfig> {
-    return this.getConfigValueByRpc<LitumConfig>(gatewayId, GET_LITUM_CONFIG_RPC);
+    return this.twoWayPersistentRpc<LitumConfig>(gatewayId, GET_LITUM_CONFIG_RPC);
   }
 
   getGatewayConfig(gatewayId: string): Observable<GatewayConfig> {
-    return this.getConfigValueByRpc<GatewayConfig>(gatewayId, GET_GATEWAY_CONFIG_RPC);
+    return this.twoWayPersistentRpc<GatewayConfig>(gatewayId, GET_GATEWAY_CONFIG_RPC);
   }
 
   getAlarmConfig(gatewayId: string): Observable<AlarmConfig[]> {
-    return this.getConfigValueByRpc<AlarmConfig[]>(gatewayId, GET_ALARM_CONFIG_RPC);
+    return this.twoWayPersistentRpc<AlarmConfig[]>(gatewayId, GET_ALARM_CONFIG_RPC);
   }
 
-  setAlarmConfig(gatewayId: string, alarmConfig: AlarmConfig[]): Observable<string> {
-    return this.setConfigValueByRpc(gatewayId, SET_ALARM_CONFIG_RPC, alarmConfig);
+  setAlarmConfig(gatewayId: string, alarmConfig: AlarmConfig[]): Observable<void> {
+    return this.oneWayPersistentRpc(gatewayId, SET_ALARM_CONFIG_RPC, alarmConfig);
   }
 
   setLitumConfig(gatewayId: string, litumConfig: LitumConfig): Observable<any> {
-    return this.setConfigValueByRpc(gatewayId, SET_LITUM_CONFIG_RPC, litumConfig);
+    return this.oneWayPersistentRpc(gatewayId, SET_LITUM_CONFIG_RPC, litumConfig);
   }
 
   setGatewayConfig(gatewayId: string, gatewayConfig: GatewayConfig): Observable<any> {
-    return this.setConfigValueByRpc(gatewayId, SET_GATEWAY_CONFIG_RPC, gatewayConfig);
+    return this.oneWayPersistentRpc(gatewayId, SET_GATEWAY_CONFIG_RPC, gatewayConfig);
   }
 
   getBusinessRules(gatewayId: string): Observable<BusinessRule[]> {

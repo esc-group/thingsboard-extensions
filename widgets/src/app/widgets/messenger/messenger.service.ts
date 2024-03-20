@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AlarmService, AttributeService, DeviceService, EntityRelationService, EntityService } from '@core/public-api';
+import { AlarmService, AttributeService, DeviceService, EntityService } from '@core/public-api';
 import { EntityId } from '@shared/public-api';
 import { Observable } from 'rxjs';
 import * as op from 'rxjs/operators';
@@ -30,7 +30,6 @@ export class MessengerService extends BasicGatewayService {
   constructor(
     protected attributeService: AttributeService,
     protected entityService: EntityService,
-    protected relationService: EntityRelationService,
     protected alarmService: AlarmService,
     protected deviceService: DeviceService
   ) {
@@ -38,15 +37,15 @@ export class MessengerService extends BasicGatewayService {
   }
 
   getEscalationConfig(messengerId: string): Observable<EscalationConfig> {
-    return this.getConfigValueByRpc<EscalationConfig>(messengerId, GET_ESCALATION_CONFIG_RPC);
+    return this.twoWayPersistentRpc<EscalationConfig>(messengerId, GET_ESCALATION_CONFIG_RPC);
   }
 
-  saveEscalationConfig(config: EscalationConfig, messengerId: string): Observable<string> {
-    return this.setConfigValueByRpc(messengerId, SET_ESCALATION_CONFIG_RPC, config);
+  saveEscalationConfig(config: EscalationConfig, messengerId: string): Observable<void> {
+    return this.oneWayPersistentRpc(messengerId, SET_ESCALATION_CONFIG_RPC, config);
   }
 
   getOutputGatewayDevices(messengerId: string): Observable<SubEntity[]> {
-    return this.getConfigValueByRpc<OutputDevice[]>(messengerId, GET_OUTPUT_DEVICES).pipe(
+    return this.twoWayPersistentRpc<OutputDevice[]>(messengerId, GET_OUTPUT_DEVICES).pipe(
       op.map((namedEntities) => {
         return namedEntities.map((item) => ({
           parentId: item.gateway.id,

@@ -19,10 +19,10 @@ export class RtxService extends BasicGatewayService {
   }
 
   getRtxConfig(gatewayId: string): Observable<RtxConfig> {
-    return this.getConfigValueByRpc(gatewayId, GET_RTX_CONFIG, 5e3);
+    return this.twoWayPersistentRpc<RtxConfig>(gatewayId, GET_RTX_CONFIG);
   }
 
-  setRtxConfig(gatewayId: string, config: RtxConfig): Observable<any> {
-    return this.setConfigValueByRpc(gatewayId, SET_RTX_CONFIG, config);
+  setRtxConfig(gatewayId: string, config: RtxConfig): Observable<void> {
+    return this.oneWayPersistentRpc(gatewayId, SET_RTX_CONFIG, config);
   }
 }
