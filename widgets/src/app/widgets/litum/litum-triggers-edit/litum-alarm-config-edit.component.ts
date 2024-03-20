@@ -10,11 +10,11 @@ interface UiAlarmConfig extends AlarmConfig {
 }
 
 @Component({
-  selector: 'ats-litum-triggers-edit',
-  templateUrl: './litum-triggers-edit.component.html',
-  styleUrls: ['./litum-triggers-edit.component.scss'],
+  selector: 'ats-litum-alarm-config-edit',
+  templateUrl: './litum-alarm-config-edit.component.html',
+  styleUrls: ['./litum-alarm-config-edit.component.scss'],
 })
-export class LitumTriggersEditComponent implements OnInit, OnDestroy, OnChanges {
+export class LitumAlarmConfigEdit implements OnInit, OnDestroy, OnChanges {
   savedUiRules: UiAlarmConfig[] = [];
 
   formGroup = new FormGroup({

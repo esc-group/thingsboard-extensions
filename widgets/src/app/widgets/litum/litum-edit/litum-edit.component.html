@@ -9,12 +9,12 @@
       {{ businessRulesError$ | async }}
     </p>
     <ng-container *ngIf="(isLoadingBusinessRules$ | async) === false">
-      <ats-litum-triggers-edit
+      <ats-litum-alarm-config-edit
         [businessRules]="allBusinessRules$ | async"
         [alarmTypes]="combinedAlarmTypes$ | async"
         [alarmConfig]="triggersConfig$ | async"
-        (save)="onTriggersSave($event)"
-      ></ats-litum-triggers-edit>
+        (save)="onAlarmConfigSave($event)"
+      ></ats-litum-alarm-config-edit>
       <div tb-toast toastTarget="triggers-save"></div>
     </ng-container>
   </mat-expansion-panel>

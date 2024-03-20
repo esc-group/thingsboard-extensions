@@ -137,7 +137,7 @@ export class LitumEditComponent extends PageComponent implements OnInit, OnDestr
       });
   };
 
-  onTriggersSave = (config: AlarmConfig[]): void => {
+  onAlarmConfigSave = (config: AlarmConfig[]): void => {
     if (this.isSaving$.value) {
       return;
     }

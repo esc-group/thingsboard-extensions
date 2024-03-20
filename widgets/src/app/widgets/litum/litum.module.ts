@@ -12,7 +12,7 @@ import { SharedModule } from '@shared/public-api';
 import { AlarmModule } from '../alarm/alarm.module';
 import { LitumEditComponent } from './litum-edit/litum-edit.component';
 import { LitumService } from './litum.service';
-import { LitumTriggersEditComponent } from './litum-triggers-edit/litum-triggers-edit.component';
+import { LitumAlarmConfigEdit } from './litum-triggers-edit/litum-alarm-config-edit.component';
 import { LitumGatewayEditComponent } from './litum-gateway-edit/litum-gateway-edit.component';
 import { LitumConfigEditComponent } from './litum-config-edit/litum-config-edit.component';
 import { LitumTagTableComponent } from './litum-tag-table/litum-tag-table.component';
@@ -20,7 +20,7 @@ import { LitumTagTableComponent } from './litum-tag-table/litum-tag-table.compon
 @NgModule({
   declarations: [
     LitumEditComponent,
-    LitumTriggersEditComponent,
+    LitumAlarmConfigEdit,
     LitumGatewayEditComponent,
     LitumConfigEditComponent,
     LitumTagTableComponent,
